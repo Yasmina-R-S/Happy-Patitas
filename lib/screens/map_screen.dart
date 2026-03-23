@@ -23,13 +23,13 @@ class MapScreen extends StatelessWidget {
                   Icon(
                     Icons.map_outlined,
                     size: 100,
-                    color: (isDark ? AppColors.textSubDark : AppColors.textSubLight).withOpacity(0.2),
+                    color: (isDark ? AppColors.textSubDark : AppColors.textSubLight).withValues(alpha: 0.2),
                   ),
                   const SizedBox(height: 16),
                   Text(
                     "Google Maps View",
                     style: TextStyle(
-                      color: (isDark ? AppColors.textSubDark : AppColors.textSubLight).withOpacity(0.5),
+                      color: (isDark ? AppColors.textSubDark : AppColors.textSubLight).withValues(alpha: 0.5),
                     ),
                   ),
                 ],
@@ -44,9 +44,9 @@ class MapScreen extends StatelessWidget {
               height: 250,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.primaryBlue.withOpacity(0.1),
+                color: AppColors.primaryBlue.withValues(alpha: 0.1),
                 border: Border.all(
-                  color: AppColors.primaryBlue.withOpacity(0.3),
+                  color: AppColors.primaryBlue.withValues(alpha: 0.3),
                   width: 2,
                   style: BorderStyle.solid,
                 ),
@@ -66,7 +66,7 @@ class MapScreen extends StatelessWidget {
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primaryBlue.withOpacity(0.5),
+                        color: AppColors.primaryBlue.withValues(alpha: 0.5),
                         blurRadius: 20,
                         spreadRadius: 10,
                       ),
@@ -99,11 +99,11 @@ class MapScreen extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: (isDark ? AppColors.surfaceDark : AppColors.surfaceLight).withOpacity(0.9),
+                color: (isDark ? AppColors.surfaceDark : AppColors.surfaceLight).withValues(alpha: 0.9),
                 borderRadius: BorderRadius.circular(24),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 20,
                     offset: const Offset(0, 10),
                   ),
@@ -114,7 +114,7 @@ class MapScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: AppColors.statusHappy.withOpacity(0.1),
+                      color: AppColors.statusHappy.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(Icons.location_on_rounded, color: AppColors.statusHappy),
@@ -169,7 +169,7 @@ class MapScreen extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: (isDark ? AppColors.surfaceDark : AppColors.surfaceLight).withOpacity(0.9),
+                    color: (isDark ? AppColors.surfaceDark : AppColors.surfaceLight).withValues(alpha: 0.9),
                     borderRadius: BorderRadius.circular(30),
                   ),
                   child: Row(
@@ -192,7 +192,7 @@ class MapScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryBlue.withOpacity(0.1),
+                          color: AppColors.primaryBlue.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: const Icon(Icons.radar_rounded, color: AppColors.primaryBlue),

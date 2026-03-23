@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         end: Alignment.bottomCenter,
                         colors: [
                           Colors.transparent,
-                          (isDark ? AppColors.bgDark : AppColors.bgLight).withOpacity(0.8),
+                          (isDark ? AppColors.bgDark : AppColors.bgLight).withValues(alpha: 0.8),
                           isDark ? AppColors.bgDark : AppColors.bgLight,
                         ],
                       ),
@@ -96,7 +96,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       Container(
                         padding: const EdgeInsets.all(12),
                         decoration: BoxDecoration(
-                          color: AppColors.primaryBlue.withOpacity(0.1),
+                          color: AppColors.primaryBlue.withValues(alpha: 0.1),
                           shape: BoxShape.circle,
                         ),
                         child: const Icon(
@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-                  ...petProvider.insights.map((insight) => AIInsightCard(insight: insight)).toList(),
+                  ...petProvider.insights.map((insight) => AIInsightCard(insight: insight)),
 
                   const SizedBox(height: 24),
 
@@ -243,9 +243,9 @@ class _HomeScreenState extends State<HomeScreen> {
           width: 64,
           height: 64,
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: color.withOpacity(0.2)),
+            border: Border.all(color: color.withValues(alpha: 0.2)),
           ),
           child: Icon(icon, color: color),
         ),

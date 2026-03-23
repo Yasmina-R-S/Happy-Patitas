@@ -1,51 +1,43 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'main_screen.dart';
 import '../utils/colors.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+class RegistroScreen extends StatelessWidget {
+  const RegistroScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         width: double.infinity,
-
-        /// FONDO DEGRADADO INVERTIDO (AZUL → BLANCO)
         decoration: const BoxDecoration(
           gradient: AppColors.primaryGradient,
         ),
-
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               children: [
 
                 /// LOGO
-                Column(
-                  children: [
-                    Image.asset(
-                      "assets/logo_hp.png", // ← Aquí está tu logo
-                      height: 80,
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      "Happy Patitas",
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.textMainLight,
-                      ),
-                    ),
-                  ],
+                Image.asset(
+                  "assets/logo_hp.png",
+                  height: 80,
+                ),
+                const SizedBox(height: 10),
+                const Text(
+                  "Happy Patitas",
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textMainLight,
+                  ),
                 ),
 
                 const SizedBox(height: 40),
 
                 /// TITULO
                 const Text(
-                  "LOGIN",
+                  "REGISTER",
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
@@ -59,10 +51,7 @@ class LoginScreen extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: 12,
-                      sigmaY: 12,
-                    ),
+                    filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                     child: Container(
                       width: 320,
                       padding: const EdgeInsets.all(20),
@@ -73,18 +62,31 @@ class LoginScreen extends StatelessWidget {
                           color: Colors.white.withValues(alpha: 0.4),
                         ),
                       ),
-
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
 
-                          /// USER
-                          const Text(
-                            "User",
-                            style: TextStyle(color: AppColors.textMainLight),
-                          ),
+                          /// NAME
+                          const Text("Name",
+                              style: TextStyle(color: AppColors.textMainLight)),
                           const SizedBox(height: 6),
+                          TextField(
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white.withValues(alpha: 0.8),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                          ),
 
+                          const SizedBox(height: 20),
+
+                          /// EMAIL
+                          const Text("Email",
+                              style: TextStyle(color: AppColors.textMainLight)),
+                          const SizedBox(height: 6),
                           TextField(
                             decoration: InputDecoration(
                               filled: true,
@@ -99,12 +101,27 @@ class LoginScreen extends StatelessWidget {
                           const SizedBox(height: 20),
 
                           /// PASSWORD
-                          const Text(
-                            "Password",
-                            style: TextStyle(color: AppColors.textMainLight),
-                          ),
+                          const Text("Password",
+                              style: TextStyle(color: AppColors.textMainLight)),
                           const SizedBox(height: 6),
+                          TextField(
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              filled: true,
+                              fillColor: Colors.white.withValues(alpha: 0.8),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                            ),
+                          ),
 
+                          const SizedBox(height: 20),
+
+                          /// CONFIRM PASSWORD
+                          const Text("Confirm Password",
+                              style: TextStyle(color: AppColors.textMainLight)),
+                          const SizedBox(height: 6),
                           TextField(
                             obscureText: true,
                             decoration: InputDecoration(
@@ -119,7 +136,7 @@ class LoginScreen extends StatelessWidget {
 
                           const SizedBox(height: 25),
 
-                          /// BOTON LOGIN
+                          /// BOTON REGISTER
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
@@ -133,14 +150,10 @@ class LoginScreen extends StatelessWidget {
                                 foregroundColor: Colors.white,
                               ),
                               onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const MainScreen()),
-                                );
+                                // TODO: lógica de registro
                               },
                               child: const Text(
-                                "Log in",
+                                "Register",
                                 style: TextStyle(fontSize: 16),
                               ),
                             ),
@@ -148,13 +161,16 @@ class LoginScreen extends StatelessWidget {
 
                           const SizedBox(height: 10),
 
-                          /// FORGOT PASSWORD
+                          /// VOLVER AL LOGIN
                           Center(
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
                               child: const Text(
-                                "Forgot password?",
-                                style: TextStyle(color: AppColors.primaryBlue),
+                                "Already have an account? Log in",
+                                style:
+                                TextStyle(color: AppColors.primaryBlue),
                               ),
                             ),
                           ),
@@ -163,6 +179,8 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+
+                const SizedBox(height: 40),
               ],
             ),
           ),

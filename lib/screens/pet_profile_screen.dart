@@ -88,10 +88,10 @@ class PetProfileScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: (pet.deviceStatus == "Online" ? AppColors.statusHappy : AppColors.textSubLight).withOpacity(0.1),
+                      color: (pet.deviceStatus == "Online" ? AppColors.statusHappy : AppColors.textSubLight).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                       border: Border.all(
-                        color: (pet.deviceStatus == "Online" ? AppColors.statusHappy : AppColors.textSubLight).withOpacity(0.3),
+                        color: (pet.deviceStatus == "Online" ? AppColors.statusHappy : AppColors.textSubLight).withValues(alpha: 0.3),
                       ),
                     ),
                     child: Row(

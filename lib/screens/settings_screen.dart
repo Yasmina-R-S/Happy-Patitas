@@ -114,13 +114,13 @@ class SettingsScreen extends StatelessWidget {
           // Logout Button
           ElevatedButton(
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.errorRed.withOpacity(0.1),
+              backgroundColor: AppColors.errorRed.withValues(alpha: 0.1),
               foregroundColor: AppColors.errorRed,
               elevation: 0,
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
-                side: BorderSide(color: AppColors.errorRed.withOpacity(0.3)),
+                side: BorderSide(color: AppColors.errorRed.withValues(alpha: 0.3)),
               ),
             ),
             onPressed: () {

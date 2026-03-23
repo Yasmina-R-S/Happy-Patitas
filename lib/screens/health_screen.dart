@@ -51,7 +51,7 @@ class HealthScreen extends StatelessWidget {
                 color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
-                  color: isDark ? Colors.white.withOpacity(0.05) : AppColors.ultraLightBlue,
+                  color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.ultraLightBlue,
                 ),
               ),
               child: BarChart(
@@ -144,7 +144,7 @@ class HealthScreen extends StatelessWidget {
           backDrawRodData: BackgroundBarChartRodData(
             show: true,
             toY: 100,
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
           ),
         ),
       ],
@@ -169,7 +169,7 @@ class HealthScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: color, size: 20),
