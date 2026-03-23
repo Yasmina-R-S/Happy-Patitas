@@ -23,7 +23,7 @@ class _LoginScreenState extends State<LoginScreen> {
             /// ICONO IZQUIERDO
             Positioned(
               top: 10,
-              left: 20,
+              left: 20,   
               child: Icon(
                 Icons.pets,
                 color: Color(0xFF3FA7F5),
