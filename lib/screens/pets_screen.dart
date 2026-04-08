@@ -48,7 +48,7 @@ class PetsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          "My Pets",
+          "Home",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [

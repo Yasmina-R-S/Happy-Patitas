@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'main_screen.dart';
+import 'forgot_password_screen.dart';
 import '../utils/colors.dart';
 
 class LoginScreen extends StatelessWidget {
@@ -151,7 +152,14 @@ class LoginScreen extends StatelessWidget {
                           /// FORGOT PASSWORD
                           Center(
                             child: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const ForgotPasswordScreen()),
+                                );
+                              },
                               child: const Text(
                                 "Forgot password?",
                                 style: TextStyle(color: AppColors.primaryBlue),

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'home_screen.dart';
 import 'map_screen.dart';
 import 'health_screen.dart';
 import 'pets_screen.dart';
@@ -17,10 +16,9 @@ class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
   final List<Widget> _screens = [
-    const HomeScreen(),
+    const PetsScreen(),
     const MapScreen(),
     const HealthScreen(),
-    const PetsScreen(),
     const SettingsScreen(),
   ];
 
@@ -55,10 +53,6 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             icon: Icon(Icons.favorite_rounded),
             label: 'Health',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.pets_rounded),
-            label: 'Pets',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.settings_rounded),
