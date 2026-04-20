@@ -1,6 +1,6 @@
 name: happy_patitas
 description: "A new Flutter project."
-publish_to: 'none' # Evita publicar accidentalmente en pub.dev
+publish_to: 'none'
 
 version: 1.0.0+1
 
@@ -12,7 +12,8 @@ dependencies:
     sdk: flutter
   cupertino_icons: ^1.0.8
   provider: ^6.1.2
-  google_maps_flutter: ^2.10.0
+  flutter_map: ^7.0.2
+  latlong2: ^0.9.1
   fl_chart: ^0.70.2
   google_fonts: ^6.2.1
   intl: ^0.20.2
@@ -29,6 +30,5 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # Assets
   assets:
     - assets/logo_hp.png

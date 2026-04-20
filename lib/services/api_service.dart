@@ -13,7 +13,7 @@ class ApiService {
       breed: "Golden Retriever",
       age: 3,
       weight: 28.5,
-      imageUrl: "https://images.unsplash.com/photo-1552053831-71594a27632d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
+      imageUrl: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60",
       mood: PetMood.happy,
       deviceStatus: "Online",
       lastVaccination: DateTime.now().subtract(const Duration(days: 60)),

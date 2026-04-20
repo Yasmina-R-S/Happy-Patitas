@@ -46,6 +46,23 @@ class _PetProfileScreenState extends State<PetProfileScreen> {
                 child: Image.network(
                   widget.pet.imageUrl,
                   fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: AppColors.primaryBlue.withOpacity(0.15),
+                    child: const Center(
+                      child:
+                          Icon(Icons.pets, size: 80, color: AppColors.primaryBlue),
+                    ),
+                  ),
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      color: AppColors.ultraLightBlue,
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                            color: AppColors.primaryBlue),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
