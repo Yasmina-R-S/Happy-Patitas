@@ -9,6 +9,21 @@ import 'collar_management_screen.dart';
 import 'battery_alerts_screen.dart';
 import 'support_screen.dart';
 
+/// Wrapper que da a la pestaña Settings su propio Navigator anidado.
+/// Así el botón atrás vuelve dentro de Settings, no cierra la app.
+class SettingsTab extends StatelessWidget {
+  const SettingsTab({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Navigator(
+      onGenerateRoute: (settings) => MaterialPageRoute(
+        builder: (_) => const SettingsScreen(),
+      ),
+    );
+  }
+}
+
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
@@ -59,7 +74,6 @@ class SettingsScreen extends StatelessWidget {
           ),
           const SizedBox(height: 40),
 
-          // Settings Groups
           _buildSectionHeader(context, "APP SETTINGS"),
           _buildSettingsTile(
             context,
@@ -68,7 +82,7 @@ class SettingsScreen extends StatelessWidget {
             "Manage alerts & sounds",
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const NotificationsScreen()),
+              MaterialPageRoute(builder: (_) => const NotificationsScreen()),
             ),
           ),
           _buildSettingsTile(
@@ -78,7 +92,7 @@ class SettingsScreen extends StatelessWidget {
             "Safe zones, data sharing",
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const PrivacySecurityScreen()),
+              MaterialPageRoute(builder: (_) => const PrivacySecurityScreen()),
             ),
           ),
           _buildSettingsTile(
@@ -88,7 +102,7 @@ class SettingsScreen extends StatelessWidget {
             "Switch app appearance",
             actionWidget: Switch(
               value: themeProvider.isDarkMode,
-              onChanged: (val) => themeProvider.toggleTheme(),
+              onChanged: (_) => themeProvider.toggleTheme(),
               activeColor: AppColors.primaryBlue,
             ),
             onTap: () => themeProvider.toggleTheme(),
@@ -103,7 +117,7 @@ class SettingsScreen extends StatelessWidget {
             "Connected devices",
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const CollarManagementScreen()),
+              MaterialPageRoute(builder: (_) => const CollarManagementScreen()),
             ),
           ),
           _buildSettingsTile(
@@ -113,7 +127,7 @@ class SettingsScreen extends StatelessWidget {
             "Low power notifications",
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const BatteryAlertsScreen()),
+              MaterialPageRoute(builder: (_) => const BatteryAlertsScreen()),
             ),
           ),
 
@@ -126,7 +140,7 @@ class SettingsScreen extends StatelessWidget {
             "FAQ, contact us",
             onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const SupportScreen()),
+              MaterialPageRoute(builder: (_) => const SupportScreen()),
             ),
           ),
           const SizedBox(height: 16),
@@ -144,9 +158,9 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
+              // Salir a login limpiando todo el stack
+              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
                 (route) => false,
               );
             },
