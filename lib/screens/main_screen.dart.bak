@@ -7,22 +7,6 @@ import 'settings_screen.dart';
 import '../utils/colors.dart';
 import '../providers/theme_provider.dart';
 
-/// Wrapper que da a la pestaña Health su propio Navigator anidado.
-/// Así el botón atrás en sub-pantallas (HeartRate, BodyTemp, Sleep)
-/// vuelve a HealthScreen en lugar de ir al login.
-class HealthTab extends StatelessWidget {
-  const HealthTab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Navigator(
-      onGenerateRoute: (settings) => MaterialPageRoute(
-        builder: (_) => const HealthScreen(),
-      ),
-    );
-  }
-}
-
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -33,12 +17,11 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   int _currentIndex = 0;
 
-  // Usamos HealthTab y SettingsTab (Navigator anidado) para que el botón
-  // atrás en sus sub-pantallas vuelva dentro de la pestaña, no al login.
+  // Usamos SettingsTab (Navigator anidado) en lugar de SettingsScreen
   final List<Widget> _screens = [
     const PetsScreen(),
     const MapScreen(),
-    const HealthTab(),
+    const HealthScreen(),
     const SettingsTab(),
   ];
 
