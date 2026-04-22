@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../utils/colors.dart';
 import '../widgets/activity_ring.dart';
+import 'heart_rate_screen.dart';
+import 'body_temp_screen.dart';
+import 'sleep_quality_screen.dart';
 
 class HealthScreen extends StatelessWidget {
   const HealthScreen({super.key});
@@ -108,10 +111,30 @@ class HealthScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            _buildMetricTile(context, Icons.favorite_rounded, "Heart Rate", "84 bpm", Colors.red),
-            _buildMetricTile(context, Icons.thermostat_rounded, "Body Temp", "38.2 °C", Colors.orange),
-            _buildMetricTile(context, Icons.nightlight_round, "Sleep Quality", "Optimal", Colors.indigo),
-            _buildMetricTile(context, Icons.water_drop_rounded, "Hydration", "Good", Colors.blue),
+            _buildMetricTile(
+              context,
+              Icons.favorite_rounded,
+              "Heart Rate",
+              "84 bpm",
+              Colors.red,
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HeartRateScreen())),
+            ),
+            _buildMetricTile(
+              context,
+              Icons.thermostat_rounded,
+              "Body Temp",
+              "38.2 °C",
+              Colors.orange,
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BodyTempScreen())),
+            ),
+            _buildMetricTile(
+              context,
+              Icons.nightlight_round,
+              "Sleep Quality",
+              "Optimal",
+              Colors.indigo,
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SleepQualityScreen())),
+            ),
             const SizedBox(height: 24),
           ],
         ),
@@ -151,49 +174,65 @@ class HealthScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMetricTile(BuildContext context, IconData icon, String title, String value, Color color) {
+  Widget _buildMetricTile(
+    BuildContext context,
+    IconData icon,
+    String title,
+    String value,
+    Color color,
+    VoidCallback onTap,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.05) : AppColors.ultraLightBlue,
-        ),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: color, size: 20),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: isDark ? Colors.white.withOpacity(0.05) : AppColors.ultraLightBlue,
           ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Text(
-              title,
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: color.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: color, size: 20),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                title,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                ),
+              ),
+            ),
+            Text(
+              value,
               style: TextStyle(
                 fontSize: 16,
-                fontWeight: FontWeight.w500,
+                fontWeight: FontWeight.bold,
                 color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
               ),
             ),
-          ),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+            const SizedBox(width: 8),
+            Icon(
+              Icons.chevron_right_rounded,
+              color: isDark ? AppColors.textSubDark : AppColors.textSubLight,
+              size: 20,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

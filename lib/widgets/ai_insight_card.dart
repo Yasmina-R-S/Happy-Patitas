@@ -11,27 +11,21 @@ class AIInsightCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
+      margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isDark
-              ? [AppColors.primaryBlue.withOpacity(0.2), Colors.transparent]
-              : [AppColors.ultraLightBlue, Colors.white],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
+        color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? AppColors.primaryBlue.withOpacity(0.3) : AppColors.lightBlue.withOpacity(0.3),
+          color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.ultraLightBlue,
         ),
       ),
       child: Row(
         children: [
           Container(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppColors.primaryBlue.withOpacity(0.1),
+              color: AppColors.primaryBlue.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: const Icon(
@@ -47,7 +41,7 @@ class AIInsightCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 14,
                 color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
-                fontWeight: FontWeight.w500,
+                height: 1.4,
               ),
             ),
           ),
