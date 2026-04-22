@@ -5,6 +5,7 @@ import '../widgets/activity_ring.dart';
 import 'heart_rate_screen.dart';
 import 'body_temp_screen.dart';
 import 'sleep_quality_screen.dart';
+import 'main_screen.dart';
 
 class HealthScreen extends StatelessWidget {
   const HealthScreen({super.key});
@@ -18,6 +19,10 @@ class HealthScreen extends StatelessWidget {
         title: const Text(
           "Health & Activity",
           style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () => HomeNavigatorScope.of(context)?.goHome(),
         ),
       ),
       body: SingleChildScrollView(

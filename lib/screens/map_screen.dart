@@ -5,6 +5,7 @@ import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../utils/colors.dart';
+import 'main_screen.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -324,6 +325,27 @@ class _MapScreenState extends State<MapScreen> {
                   child: const Icon(Icons.my_location_rounded, color: Colors.white),
                 ),
               ],
+            ),
+          ),
+          // Botón volver a Home
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 12,
+            left: 16,
+            child: SafeArea(
+              child: Material(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12),
+                elevation: 4,
+                shadowColor: Colors.black26,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () => HomeNavigatorScope.of(context)?.goHome(),
+                  child: const Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Icon(Icons.arrow_back_rounded, color: Colors.black87, size: 22),
+                  ),
+                ),
+              ),
             ),
           ),
         ],

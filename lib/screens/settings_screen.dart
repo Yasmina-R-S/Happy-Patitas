@@ -8,6 +8,7 @@ import 'privacy_security_screen.dart';
 import 'collar_management_screen.dart';
 import 'battery_alerts_screen.dart';
 import 'support_screen.dart';
+import 'main_screen.dart';
 
 /// Wrapper que da a la pestaña Settings su propio Navigator anidado.
 /// Así el botón atrás vuelve dentro de Settings, no cierra la app.
@@ -37,6 +38,10 @@ class SettingsScreen extends StatelessWidget {
         title: const Text(
           "Settings",
           style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_rounded),
+          onPressed: () => HomeNavigatorScope.of(context)?.goHome(),
         ),
       ),
       body: ListView(
