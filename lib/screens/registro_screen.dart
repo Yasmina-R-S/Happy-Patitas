@@ -1,17 +1,23 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../utils/colors.dart';
+import '../providers/theme_provider.dart';
 
 class RegistroScreen extends StatelessWidget {
   const RegistroScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.watch<ThemeProvider>().themeMode == ThemeMode.dark ||
+        (context.watch<ThemeProvider>().themeMode == ThemeMode.system &&
+            MediaQuery.platformBrightnessOf(context) == Brightness.dark);
+
     return Scaffold(
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: AppColors.primaryGradient,
+        decoration: BoxDecoration(
+          gradient: isDark ? AppColors.darkGradient : AppColors.primaryGradient,
         ),
         child: Center(
           child: SingleChildScrollView(
@@ -24,24 +30,24 @@ class RegistroScreen extends StatelessWidget {
                   height: 80,
                 ),
                 const SizedBox(height: 10),
-                const Text(
+                Text(
                   "Happy Patitas",
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textMainLight,
+                    color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
                   ),
                 ),
 
                 const SizedBox(height: 40),
 
                 /// TITULO
-                const Text(
+                Text(
                   "REGISTER",
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textMainLight,
+                    color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
                   ),
                 ),
 
@@ -56,10 +62,14 @@ class RegistroScreen extends StatelessWidget {
                       width: 320,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.25),
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.07)
+                            : Colors.white.withValues(alpha: 0.25),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.4),
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.12)
+                              : Colors.white.withValues(alpha: 0.4),
                         ),
                       ),
                       child: Column(
@@ -67,13 +77,20 @@ class RegistroScreen extends StatelessWidget {
                         children: [
 
                           /// NAME
-                          const Text("Name",
-                              style: TextStyle(color: AppColors.textMainLight)),
+                          Text("Name",
+                              style: TextStyle(
+                                color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                              )),
                           const SizedBox(height: 6),
                           TextField(
+                            style: TextStyle(
+                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                            ),
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor: Colors.white.withValues(alpha: 0.8),
+                              fillColor: isDark
+                                  ? AppColors.surfaceDark.withValues(alpha: 0.8)
+                                  : Colors.white.withValues(alpha: 0.8),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none,
@@ -84,13 +101,20 @@ class RegistroScreen extends StatelessWidget {
                           const SizedBox(height: 20),
 
                           /// EMAIL
-                          const Text("Email",
-                              style: TextStyle(color: AppColors.textMainLight)),
+                          Text("Email",
+                              style: TextStyle(
+                                color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                              )),
                           const SizedBox(height: 6),
                           TextField(
+                            style: TextStyle(
+                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                            ),
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor: Colors.white.withValues(alpha: 0.8),
+                              fillColor: isDark
+                                  ? AppColors.surfaceDark.withValues(alpha: 0.8)
+                                  : Colors.white.withValues(alpha: 0.8),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none,
@@ -101,14 +125,21 @@ class RegistroScreen extends StatelessWidget {
                           const SizedBox(height: 20),
 
                           /// PASSWORD
-                          const Text("Password",
-                              style: TextStyle(color: AppColors.textMainLight)),
+                          Text("Password",
+                              style: TextStyle(
+                                color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                              )),
                           const SizedBox(height: 6),
                           TextField(
                             obscureText: true,
+                            style: TextStyle(
+                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                            ),
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor: Colors.white.withValues(alpha: 0.8),
+                              fillColor: isDark
+                                  ? AppColors.surfaceDark.withValues(alpha: 0.8)
+                                  : Colors.white.withValues(alpha: 0.8),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none,
@@ -119,14 +150,21 @@ class RegistroScreen extends StatelessWidget {
                           const SizedBox(height: 20),
 
                           /// CONFIRM PASSWORD
-                          const Text("Confirm Password",
-                              style: TextStyle(color: AppColors.textMainLight)),
+                          Text("Confirm Password",
+                              style: TextStyle(
+                                color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                              )),
                           const SizedBox(height: 6),
                           TextField(
                             obscureText: true,
+                            style: TextStyle(
+                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                            ),
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor: Colors.white.withValues(alpha: 0.8),
+                              fillColor: isDark
+                                  ? AppColors.surfaceDark.withValues(alpha: 0.8)
+                                  : Colors.white.withValues(alpha: 0.8),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none,
@@ -141,8 +179,7 @@ class RegistroScreen extends StatelessWidget {
                             width: double.infinity,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 14),
+                                padding: const EdgeInsets.symmetric(vertical: 14),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
                                 ),
@@ -167,10 +204,13 @@ class RegistroScreen extends StatelessWidget {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: const Text(
+                              child: Text(
                                 "Already have an account? Log in",
-                                style:
-                                TextStyle(color: AppColors.primaryBlue),
+                                style: TextStyle(
+                                  color: isDark
+                                      ? AppColors.lightBlue
+                                      : AppColors.primaryBlue,
+                                ),
                               ),
                             ),
                           ),

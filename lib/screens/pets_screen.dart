@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../models/pet_model.dart';
 import '../widgets/pet_card.dart';
 import 'pet_profile_screen.dart';
+import 'collar_management_screen.dart';
+import 'login_screen.dart';
 
 class PetsScreen extends StatelessWidget {
   const PetsScreen({super.key});
@@ -53,7 +55,24 @@ class PetsScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
+                    (route) => false,
+              );
+            },
+            icon: const Icon(Icons.arrow_back_ios_new_rounded),
+            tooltip: 'Ir al Login',
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CollarManagementScreen(),
+                ),
+              );
+            },
             icon: const Icon(Icons.add_rounded),
           ),
         ],

@@ -1,23 +1,26 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'main_screen.dart';
 import 'forgot_password_screen.dart';
 import '../utils/colors.dart';
+import '../providers/theme_provider.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.watch<ThemeProvider>().themeMode == ThemeMode.dark ||
+        (context.watch<ThemeProvider>().themeMode == ThemeMode.system &&
+            MediaQuery.platformBrightnessOf(context) == Brightness.dark);
+
     return Scaffold(
       body: Container(
         width: double.infinity,
-
-        /// FONDO DEGRADADO INVERTIDO (AZUL → BLANCO)
-        decoration: const BoxDecoration(
-          gradient: AppColors.primaryGradient,
+        decoration: BoxDecoration(
+          gradient: isDark ? AppColors.darkGradient : AppColors.primaryGradient,
         ),
-
         child: Center(
           child: SingleChildScrollView(
             child: Column(
@@ -27,16 +30,16 @@ class LoginScreen extends StatelessWidget {
                 Column(
                   children: [
                     Image.asset(
-                      "assets/logo_hp.png", // ← Aquí está tu logo
+                      "assets/logo_hp.png",
                       height: 80,
                     ),
                     const SizedBox(height: 10),
-                    const Text(
+                    Text(
                       "Happy Patitas",
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: AppColors.textMainLight,
+                        color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
                       ),
                     ),
                   ],
@@ -45,12 +48,12 @@ class LoginScreen extends StatelessWidget {
                 const SizedBox(height: 40),
 
                 /// TITULO
-                const Text(
+                Text(
                   "LOGIN",
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
-                    color: AppColors.textMainLight,
+                    color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
                   ),
                 ),
 
@@ -60,18 +63,19 @@ class LoginScreen extends StatelessWidget {
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: 12,
-                      sigmaY: 12,
-                    ),
+                    filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
                     child: Container(
                       width: 320,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.25),
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.07)
+                            : Colors.white.withValues(alpha: 0.25),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.4),
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.12)
+                              : Colors.white.withValues(alpha: 0.4),
                         ),
                       ),
 
@@ -80,16 +84,23 @@ class LoginScreen extends StatelessWidget {
                         children: [
 
                           /// USER
-                          const Text(
+                          Text(
                             "User",
-                            style: TextStyle(color: AppColors.textMainLight),
+                            style: TextStyle(
+                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                            ),
                           ),
                           const SizedBox(height: 6),
 
                           TextField(
+                            style: TextStyle(
+                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                            ),
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor: Colors.white.withValues(alpha: 0.8),
+                              fillColor: isDark
+                                  ? AppColors.surfaceDark.withValues(alpha: 0.8)
+                                  : Colors.white.withValues(alpha: 0.8),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none,
@@ -100,17 +111,24 @@ class LoginScreen extends StatelessWidget {
                           const SizedBox(height: 20),
 
                           /// PASSWORD
-                          const Text(
+                          Text(
                             "Password",
-                            style: TextStyle(color: AppColors.textMainLight),
+                            style: TextStyle(
+                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                            ),
                           ),
                           const SizedBox(height: 6),
 
                           TextField(
                             obscureText: true,
+                            style: TextStyle(
+                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                            ),
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor: Colors.white.withValues(alpha: 0.8),
+                              fillColor: isDark
+                                  ? AppColors.surfaceDark.withValues(alpha: 0.8)
+                                  : Colors.white.withValues(alpha: 0.8),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none,
@@ -125,8 +143,7 @@ class LoginScreen extends StatelessWidget {
                             width: double.infinity,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 14),
+                                padding: const EdgeInsets.symmetric(vertical: 14),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
                                 ),
@@ -157,12 +174,16 @@ class LoginScreen extends StatelessWidget {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const ForgotPasswordScreen()),
+                                      const ForgotPasswordScreen()),
                                 );
                               },
-                              child: const Text(
+                              child: Text(
                                 "Forgot password?",
-                                style: TextStyle(color: AppColors.primaryBlue),
+                                style: TextStyle(
+                                  color: isDark
+                                      ? AppColors.lightBlue
+                                      : AppColors.primaryBlue,
+                                ),
                               ),
                             ),
                           ),

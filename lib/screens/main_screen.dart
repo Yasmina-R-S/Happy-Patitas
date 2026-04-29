@@ -70,37 +70,49 @@ class _MainScreenState extends State<MainScreen> {
 
     return HomeNavigatorScope(
       goHome: _goHome,
-      child: Scaffold(
-        body: IndexedStack(
-          index: _currentIndex,
-          children: _screens,
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _currentIndex,
-          onTap: (index) => setState(() => _currentIndex = index),
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
-          selectedItemColor: AppColors.primaryBlue,
-          unselectedItemColor: AppColors.textSubLight,
-          showUnselectedLabels: true,
-          items: const [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home_rounded),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.map_rounded),
-              label: 'Map',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.favorite_rounded),
-              label: 'Health',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings_rounded),
-              label: 'Settings',
-            ),
-          ],
+      child: PopScope(
+        // Nunca permitimos que el sistema salga de la app con el botón atrás
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          if (didPop) return; // ya gestionado (no debería ocurrir con canPop: false)
+          if (_currentIndex != 0) {
+            // Si no estamos en Home, volvemos a Home
+            setState(() => _currentIndex = 0);
+          }
+          // Si ya estamos en Home, no hacemos nada (no salimos de la app)
+        },
+        child: Scaffold(
+          body: IndexedStack(
+            index: _currentIndex,
+            children: _screens,
+          ),
+          bottomNavigationBar: BottomNavigationBar(
+            currentIndex: _currentIndex,
+            onTap: (index) => setState(() => _currentIndex = index),
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+            selectedItemColor: AppColors.primaryBlue,
+            unselectedItemColor: AppColors.textSubLight,
+            showUnselectedLabels: true,
+            items: const [
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home_rounded),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.map_rounded),
+                label: 'Map',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.favorite_rounded),
+                label: 'Health',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.settings_rounded),
+                label: 'Settings',
+              ),
+            ],
+          ),
         ),
       ),
     );

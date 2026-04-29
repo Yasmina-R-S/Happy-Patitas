@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'login_screen.dart';
 import 'registro_screen.dart';
 import '../utils/colors.dart';
+import '../providers/theme_provider.dart';
 
 class icioScreen extends StatelessWidget {
   const icioScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isDark = context.watch<ThemeProvider>().themeMode == ThemeMode.dark ||
+        (context.watch<ThemeProvider>().themeMode == ThemeMode.system &&
+            MediaQuery.platformBrightnessOf(context) == Brightness.dark);
+
     return Scaffold(
       body: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: AppColors.primaryGradient,
+        decoration: BoxDecoration(
+          gradient: isDark ? AppColors.darkGradient : AppColors.primaryGradient,
         ),
         child: Center(
           child: Column(
@@ -25,12 +31,12 @@ class icioScreen extends StatelessWidget {
                 height: 135,
               ),
               const SizedBox(height: 10),
-              const Text(
+              Text(
                 "Happy Patitas",
                 style: TextStyle(
                   fontSize: 35,
                   fontWeight: FontWeight.bold,
-                  color: AppColors.textMainLight,
+                  color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
                 ),
               ),
 
@@ -73,8 +79,12 @@ class icioScreen extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
-                    backgroundColor: Colors.white,
-                    foregroundColor: AppColors.primaryBlue,
+                    backgroundColor: isDark
+                        ? AppColors.surfaceDark
+                        : Colors.white,
+                    foregroundColor: isDark
+                        ? AppColors.lightBlue
+                        : AppColors.primaryBlue,
                   ),
                   onPressed: () {
                     Navigator.push(
