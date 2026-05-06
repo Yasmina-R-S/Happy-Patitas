@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
+import '../services/database_service.dart';
 
 class CollarManagementScreen extends StatefulWidget {
   const CollarManagementScreen({super.key});
@@ -177,8 +178,19 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
               ),
               const Spacer(),
               TextButton(
-                onPressed: () {},
-                child: const Text("Details",
+                onPressed: () async {
+                  await DatabaseService().guardarCollar(
+                    // idDueno omitido → DatabaseService usa currentUser.uid automáticamente
+                    idMascota: device['pet'],
+                    bateria: device['battery'],
+                  );
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text("Datos de ${device['name']} guardados")),
+                    );
+                  }
+                },
+                child: const Text("Save",
                     style: TextStyle(color: AppColors.primaryBlue)),
               ),
             ],
@@ -278,6 +290,42 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: const Text("Cancel"),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.primaryBlue,
+              foregroundColor: Colors.white,
+            ),
+            onPressed: () async {
+              try {
+                // LLamada al servicio de base de datos
+                await DatabaseService().guardarCollar(
+                  // idDueno omitido → DatabaseService usa currentUser.uid automáticamente
+                  idMascota: "pet_nueva",
+                  bateria: 100,
+                );
+
+                if (context.mounted) {
+                  Navigator.pop(ctx);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("¡Collar guardado con éxito!"),
+                      backgroundColor: AppColors.statusHappy,
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text("Error al guardar: $e"),
+                      backgroundColor: AppColors.errorRed,
+                    ),
+                  );
+                }
+              }
+            },
+            child: const Text("Save & Pair"),
           ),
         ],
       ),

@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "995515255276",
+    "project_id": "happy-patitass",
+    "storage_bucket": "happy-patitass.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:995515255276:android:bd3e6356de1429e6ab18c9",
+        "android_client_info": {
+          "package_name": "com.example.happy_patitas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "995515255276-41ml1jcsdudh5kej8roufuf1mr8jusml.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbbPyr3-nRsT_rfgDHP-ZaenXPE6QXQlM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "995515255276-41ml1jcsdudh5kej8roufuf1mr8jusml.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
