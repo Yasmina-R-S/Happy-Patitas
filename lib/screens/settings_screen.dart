@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils/colors.dart';
 import '../providers/theme_provider.dart';
+import '../providers/locale_provider.dart';
 import 'login_screen.dart';
 import 'notifications_screen.dart';
 import 'privacy_security_screen.dart';
@@ -11,7 +12,6 @@ import 'support_screen.dart';
 import 'main_screen.dart';
 
 /// Wrapper que da a la pestaña Settings su propio Navigator anidado.
-/// Así el botón atrás vuelve dentro de Settings, no cierra la app.
 class SettingsTab extends StatelessWidget {
   const SettingsTab({super.key});
 
@@ -32,6 +32,13 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final themeProvider = context.watch<ThemeProvider>();
+    final localeProvider = context.watch<LocaleProvider>();
+
+    // Nombre del idioma actual
+    final currentLang = LocaleProvider.supportedLanguages.firstWhere(
+      (l) => l['code'] == localeProvider.locale.languageCode,
+      orElse: () => LocaleProvider.supportedLanguages.first,
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -112,6 +119,14 @@ class SettingsScreen extends StatelessWidget {
             ),
             onTap: () => themeProvider.toggleTheme(),
           ),
+          // ── NUEVO: Selector de idioma ──
+          _buildSettingsTile(
+            context,
+            Icons.language_rounded,
+            "Language",
+            "${currentLang['flag']} ${currentLang['name']}",
+            onTap: () => _showLanguagePicker(context, localeProvider),
+          ),
 
           const SizedBox(height: 32),
           _buildSectionHeader(context, "DEVICE SETTINGS"),
@@ -163,7 +178,6 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              // Salir a login limpiando todo el stack
               Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (_) => const LoginScreen()),
                 (route) => false,
@@ -177,6 +191,112 @@ class SettingsScreen extends StatelessWidget {
           const SizedBox(height: 40),
         ],
       ),
+    );
+  }
+
+  /// Muestra un bottom sheet con los idiomas disponibles
+  void _showLanguagePicker(BuildContext context, LocaleProvider localeProvider) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      builder: (ctx) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Handle bar
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: isDark ? Colors.white24 : Colors.black12,
+                    borderRadius: BorderRadius.circular(2),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                "Select Language",
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                ),
+              ),
+              const SizedBox(height: 16),
+              ...LocaleProvider.supportedLanguages.map((lang) {
+                final isSelected =
+                    localeProvider.locale.languageCode == lang['code'];
+                return InkWell(
+                  borderRadius: BorderRadius.circular(16),
+                  onTap: () {
+                    localeProvider.setLocale(Locale(lang['code']!));
+                    Navigator.pop(ctx);
+                  },
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 14),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? AppColors.primaryBlue.withOpacity(0.12)
+                          : (isDark
+                              ? AppColors.surfaceDark
+                              : AppColors.surfaceLight),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isSelected
+                            ? AppColors.primaryBlue
+                            : (isDark
+                                ? Colors.white.withOpacity(0.05)
+                                : AppColors.ultraLightBlue),
+                        width: isSelected ? 1.5 : 1,
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        Text(
+                          lang['flag']!,
+                          style: const TextStyle(fontSize: 24),
+                        ),
+                        const SizedBox(width: 16),
+                        Text(
+                          lang['name']!,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                            color: isSelected
+                                ? AppColors.primaryBlue
+                                : (isDark
+                                    ? AppColors.textMainDark
+                                    : AppColors.textMainLight),
+                          ),
+                        ),
+                        const Spacer(),
+                        if (isSelected)
+                          const Icon(
+                            Icons.check_circle_rounded,
+                            color: AppColors.primaryBlue,
+                            size: 20,
+                          ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            ],
+          ),
+        );
+      },
     );
   }
 
