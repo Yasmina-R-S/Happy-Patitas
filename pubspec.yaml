@@ -25,12 +25,19 @@ dependencies:
   flutter_map: ^7.0.2
   latlong2: ^0.9.1
   geolocator: ^13.0.2
+<<<<<<< HEAD
 
   # UI
   google_fonts: ^6.2.1
   fl_chart: ^0.69.0
 
   cupertino_icons: ^1.0.8
+=======
+  image_picker: ^1.1.2
+<<<<<<< HEAD
+>>>>>>> parent of 08277e3 (Cambio NO ACABADOS (FIREBASE))
+=======
+>>>>>>> parent of 08277e3 (Cambio NO ACABADOS (FIREBASE))
 
 dev_dependencies:
   flutter_test:
