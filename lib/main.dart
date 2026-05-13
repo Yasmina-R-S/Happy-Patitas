@@ -1,19 +1,31 @@
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
+
+// Firebase
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'firebase_options.dart';
+
+// Screens
 import 'screens/icio_creen.dart';
+import 'screens/main_screen.dart';
+import 'screens/login_screen.dart';
+
+// Providers
 import 'providers/pet_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Cargar idioma persistido antes de arrancar la UI
+  // Cargar idioma guardado
   final localeProvider = LocaleProvider();
   await localeProvider.loadSavedLocale();
 
@@ -22,7 +34,11 @@ void main() async {
 
 class MyApp extends StatelessWidget {
   final LocaleProvider localeProvider;
-  const MyApp({super.key, required this.localeProvider});
+
+  const MyApp({
+    super.key,
+    required this.localeProvider,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +51,10 @@ class MyApp extends StatelessWidget {
       child: Consumer2<ThemeProvider, LocaleProvider>(
         builder: (context, themeProvider, localeProvider, child) {
           return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'Happy Patitas',
+
+            // Localización
             locale: localeProvider.locale,
             supportedLocales: const [
               Locale('en'),
@@ -47,21 +67,32 @@ class MyApp extends StatelessWidget {
               GlobalWidgetsLocalizations.delegate,
               GlobalCupertinoLocalizations.delegate,
             ],
-            title: 'Happy Patitas',
-            debugShowCheckedModeBanner: false,
+
+            // Tema
             themeMode: themeProvider.themeMode,
+
             theme: ThemeData(
               brightness: Brightness.light,
               colorSchemeSeed: const Color(0xFF1976D2),
               useMaterial3: true,
             ),
+
             darkTheme: ThemeData(
               brightness: Brightness.dark,
               colorSchemeSeed: const Color(0xFF1976D2),
               useMaterial3: true,
             ),
 
-/// Escucha el stream de autenticación y redirige según el estado
+            // Inicio app
+            home: const AuthGate(),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// Escucha autenticación y redirige según estado
 class AuthGate extends StatelessWidget {
   const AuthGate({super.key});
 
@@ -70,25 +101,32 @@ class AuthGate extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
+        // Loading
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const _SplashCargando();
+          return const SplashCargando();
         }
-        if (snapshot.hasData && snapshot.data != null) {
+
+        // Usuario logueado
+        if (snapshot.hasData) {
           return const MainScreen();
         }
+
+        // Usuario no logueado
         return const LoginScreen();
       },
     );
   }
 }
 
-class _SplashCargando extends StatelessWidget {
-  const _SplashCargando();
+class SplashCargando extends StatelessWidget {
+  const SplashCargando({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 }

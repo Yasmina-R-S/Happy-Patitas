@@ -1,24 +1,27 @@
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'main_screen.dart';
+
+import '../providers/theme_provider.dart';
+import '../services/auth_service.dart';
+import '../utils/colors.dart';
 import 'forgot_password_screen.dart';
 import 'registro_screen.dart';
-import '../utils/colors.dart';
-import '../providers/theme_provider.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
   @override
-<<<<<<< HEAD
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+
   final _authService = AuthService();
+
   bool _cargando = false;
   bool _mostrarPassword = false;
 
@@ -32,17 +35,29 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _entrar() async {
     final email = _emailController.text.trim();
     final password = _passwordController.text;
+
     if (email.isEmpty || password.isEmpty) {
       _mostrarError('Por favor, rellena todos los campos.');
       return;
     }
+
     setState(() => _cargando = true);
+
     try {
-      await _authService.iniciarSesion(email: email, password: password);
+      await _authService.iniciarSesion(
+        email: email,
+        password: password,
+      );
     } catch (e) {
-      if (mounted) _mostrarError(e.toString().replaceFirst('Exception: ', ''));
+      if (mounted) {
+        _mostrarError(
+          e.toString().replaceFirst('Exception: ', ''),
+        );
+      }
     } finally {
-      if (mounted) setState(() => _cargando = false);
+      if (mounted) {
+        setState(() => _cargando = false);
+      }
     }
   }
 
@@ -52,30 +67,34 @@ class _LoginScreenState extends State<LoginScreen> {
         content: Text(mensaje),
         backgroundColor: AppColors.errorRed,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
       ),
     );
   }
 
   @override
-=======
->>>>>>> 51b4681e10c248d5e469a69a77328dc761a34e71
   Widget build(BuildContext context) {
-    final isDark = context.watch<ThemeProvider>().themeMode == ThemeMode.dark ||
-        (context.watch<ThemeProvider>().themeMode == ThemeMode.system &&
+    final themeProvider = context.watch<ThemeProvider>();
+
+    final isDark =
+        themeProvider.themeMode == ThemeMode.dark ||
+        (themeProvider.themeMode == ThemeMode.system &&
             MediaQuery.platformBrightnessOf(context) == Brightness.dark);
 
     return Scaffold(
       body: Container(
         width: double.infinity,
         decoration: BoxDecoration(
-          gradient: isDark ? AppColors.darkGradient : AppColors.primaryGradient,
+          gradient: isDark
+              ? AppColors.darkGradient
+              : AppColors.primaryGradient,
         ),
         child: Center(
           child: SingleChildScrollView(
             child: Column(
               children: [
-
                 /// LOGO
                 Column(
                   children: [
@@ -89,7 +108,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                        color: isDark
+                            ? AppColors.textMainDark
+                            : AppColors.textMainLight,
                       ),
                     ),
                   ],
@@ -97,23 +118,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
                 const SizedBox(height: 40),
 
-                /// TITULO
+                /// TÍTULO
                 Text(
                   "LOGIN",
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                    color: isDark
+                        ? AppColors.textMainDark
+                        : AppColors.textMainLight,
                   ),
                 ),
 
                 const SizedBox(height: 30),
 
-                /// FORMULARIO CON EFECTO CRISTAL
+                /// FORMULARIO
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
                   child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+                    filter: ImageFilter.blur(
+                      sigmaX: 12,
+                      sigmaY: 12,
+                    ),
                     child: Container(
                       width: 320,
                       padding: const EdgeInsets.all(20),
@@ -128,23 +154,28 @@ class _LoginScreenState extends State<LoginScreen> {
                               : Colors.white.withValues(alpha: 0.4),
                         ),
                       ),
-
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
-                          /// USER
+                          /// EMAIL
                           Text(
                             "User",
                             style: TextStyle(
-                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                              color: isDark
+                                  ? AppColors.textMainDark
+                                  : AppColors.textMainLight,
                             ),
                           ),
+
                           const SizedBox(height: 6),
 
                           TextField(
+                            controller: _emailController,
+                            keyboardType: TextInputType.emailAddress,
                             style: TextStyle(
-                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                              color: isDark
+                                  ? AppColors.textMainDark
+                                  : AppColors.textMainLight,
                             ),
                             decoration: InputDecoration(
                               filled: true,
@@ -164,15 +195,21 @@ class _LoginScreenState extends State<LoginScreen> {
                           Text(
                             "Password",
                             style: TextStyle(
-                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                              color: isDark
+                                  ? AppColors.textMainDark
+                                  : AppColors.textMainLight,
                             ),
                           ),
+
                           const SizedBox(height: 6),
 
                           TextField(
-                            obscureText: true,
+                            controller: _passwordController,
+                            obscureText: !_mostrarPassword,
                             style: TextStyle(
-                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                              color: isDark
+                                  ? AppColors.textMainDark
+                                  : AppColors.textMainLight,
                             ),
                             decoration: InputDecoration(
                               filled: true,
@@ -183,30 +220,47 @@ class _LoginScreenState extends State<LoginScreen> {
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none,
                               ),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  _mostrarPassword
+                                      ? Icons.visibility_off
+                                      : Icons.visibility,
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    _mostrarPassword =
+                                        !_mostrarPassword;
+                                  });
+                                },
+                              ),
                             ),
                           ),
 
                           const SizedBox(height: 25),
 
-                          /// BOTON LOGIN
+                          /// BOTÓN LOGIN
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(30),
                                 ),
-                                backgroundColor: AppColors.primaryBlue,
+                                backgroundColor:
+                                    AppColors.primaryBlue,
                                 foregroundColor: Colors.white,
                               ),
-<<<<<<< HEAD
-                              onPressed: _cargando ? null : _entrar,
+                              onPressed:
+                                  _cargando ? null : _entrar,
                               child: _cargando
                                   ? const SizedBox(
                                       height: 20,
                                       width: 20,
-                                      child: CircularProgressIndicator(
+                                      child:
+                                          CircularProgressIndicator(
                                         color: Colors.white,
                                         strokeWidth: 2,
                                       ),
@@ -217,15 +271,21 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ),
                             ),
                           ),
+
                           const SizedBox(height: 10),
-                          /// BOTON REGISTRARSE
+
+                          /// BOTÓN REGISTRO
                           SizedBox(
                             width: double.infinity,
                             child: OutlinedButton(
                               style: OutlinedButton.styleFrom(
-                                padding: const EdgeInsets.symmetric(vertical: 14),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 14,
+                                ),
                                 shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
+                                  borderRadius: BorderRadius.circular(
+                                    30,
+                                  ),
                                 ),
                                 side: BorderSide(
                                   color: isDark
@@ -239,18 +299,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               onPressed: () {
                                 Navigator.push(
                                   context,
-                                  MaterialPageRoute(builder: (_) => const RegistroScreen()),
-=======
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
                                   MaterialPageRoute(
-                                      builder: (context) => const MainScreen()),
->>>>>>> 51b4681e10c248d5e469a69a77328dc761a34e71
+                                    builder: (_) =>
+                                        const RegistroScreen(),
+                                  ),
                                 );
                               },
                               child: const Text(
-                                "Log in",
+                                "Registrarse",
                                 style: TextStyle(fontSize: 16),
                               ),
                             ),
@@ -265,8 +321,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                      const ForgotPasswordScreen()),
+                                    builder: (_) =>
+                                        const ForgotPasswordScreen(),
+                                  ),
                                 );
                               },
                               child: Text(
