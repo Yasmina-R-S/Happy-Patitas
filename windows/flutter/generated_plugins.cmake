@@ -3,9 +3,13 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+<<<<<<< HEAD
   cloud_firestore
   firebase_auth
   firebase_core
+=======
+  file_selector_windows
+>>>>>>> parent of 08277e3 (Cambio NO ACABADOS (FIREBASE))
   geolocator_windows
 )
 
