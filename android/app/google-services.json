@@ -14,14 +14,6 @@
       },
       "oauth_client": [
         {
-          "client_id": "995515255276-tv8g2uokjiefko0u0q93q2rcp7302p3n.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.happy_patitas",
-            "certificate_hash": "4796fe287c9c09c3245909022167d0b6a1d04db2"
-          }
-        },
-        {
           "client_id": "995515255276-41ml1jcsdudh5kej8roufuf1mr8jusml.apps.googleusercontent.com",
           "client_type": 3
         }
