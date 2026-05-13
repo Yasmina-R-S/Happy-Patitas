@@ -34,6 +34,9 @@ dependencies:
   cupertino_icons: ^1.0.8
 =======
   image_picker: ^1.1.2
+<<<<<<< HEAD
+>>>>>>> parent of 08277e3 (Cambio NO ACABADOS (FIREBASE))
+=======
 >>>>>>> parent of 08277e3 (Cambio NO ACABADOS (FIREBASE))
 
 dev_dependencies:
