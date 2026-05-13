@@ -52,7 +52,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       pet.imageUrl,
                       fit: BoxFit.cover,
                       errorBuilder: (context, error, stackTrace) => Container(
-                        color: AppColors.primaryBlue.withOpacity(0.15),
+                        color: AppColors.primaryBlue.withValues(alpha: 0.15),
                         child: const Center(
                           child: Icon(Icons.pets, size: 80, color: AppColors.primaryBlue),
                         ),

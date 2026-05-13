@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../utils/colors.dart';
-import '../services/database_service.dart';
 
 class CollarManagementScreen extends StatefulWidget {
   const CollarManagementScreen({super.key});
@@ -31,8 +30,6 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -90,9 +87,9 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: connected
-              ? AppColors.statusHappy.withOpacity(0.3)
+              ? AppColors.statusHappy.withValues(alpha: 0.3)
               : isDark
-                  ? Colors.white.withOpacity(0.05)
+                  ? Colors.white.withValues(alpha: 0.05)
                   : AppColors.ultraLightBlue,
         ),
       ),
@@ -104,7 +101,7 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryBlue.withOpacity(0.1),
+                  color: AppColors.primaryBlue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(Icons.bluetooth_rounded,
@@ -137,7 +134,7 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: (connected ? AppColors.statusHappy : AppColors.textSubLight)
-                      .withOpacity(0.1),
+                      .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -157,7 +154,7 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
               Icon(Icons.battery_full_rounded, size: 16, color: batteryColor),
               const SizedBox(width: 4),
               Text(
-                "${battery}%",
+                "$battery%",
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -178,19 +175,8 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
               ),
               const Spacer(),
               TextButton(
-                onPressed: () async {
-                  await DatabaseService().guardarCollar(
-                    // idDueno omitido → DatabaseService usa currentUser.uid automáticamente
-                    idMascota: device['pet'],
-                    bateria: device['battery'],
-                  );
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text("Datos de ${device['name']} guardados")),
-                    );
-                  }
-                },
-                child: const Text("Save",
+                onPressed: () {},
+                child: const Text("Details",
                     style: TextStyle(color: AppColors.primaryBlue)),
               ),
             ],
@@ -234,7 +220,7 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
           color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isDark ? Colors.white.withOpacity(0.05) : AppColors.ultraLightBlue,
+            color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.ultraLightBlue,
           ),
         ),
         child: Row(
@@ -242,7 +228,7 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppColors.primaryBlue.withOpacity(0.1),
+                color: AppColors.primaryBlue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: AppColors.primaryBlue, size: 20),
@@ -290,42 +276,6 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
           TextButton(
             onPressed: () => Navigator.pop(ctx),
             child: const Text("Cancel"),
-          ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryBlue,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () async {
-              try {
-                // LLamada al servicio de base de datos
-                await DatabaseService().guardarCollar(
-                  // idDueno omitido → DatabaseService usa currentUser.uid automáticamente
-                  idMascota: "pet_nueva",
-                  bateria: 100,
-                );
-
-                if (context.mounted) {
-                  Navigator.pop(ctx);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("¡Collar guardado con éxito!"),
-                      backgroundColor: AppColors.statusHappy,
-                    ),
-                  );
-                }
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text("Error al guardar: $e"),
-                      backgroundColor: AppColors.errorRed,
-                    ),
-                  );
-                }
-              }
-            },
-            child: const Text("Save & Pair"),
           ),
         ],
       ),

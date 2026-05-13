@@ -1,11 +1,98 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../utils/colors.dart';
 import '../providers/theme_provider.dart';
+import '../providers/pet_provider.dart';
 
-class RegistroScreen extends StatelessWidget {
+class RegistroScreen extends StatefulWidget {
   const RegistroScreen({super.key});
+
+  @override
+  State<RegistroScreen> createState() => _RegistroScreenState();
+}
+
+class _RegistroScreenState extends State<RegistroScreen> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _register() async {
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final password = _passwordController.text;
+    final confirm = _confirmPasswordController.text;
+
+    // Validaciones básicas
+    if (name.isEmpty || email.isEmpty || password.isEmpty || confirm.isEmpty) {
+      setState(() => _errorMessage = 'Please fill in all fields.');
+      return;
+    }
+    if (password != confirm) {
+      setState(() => _errorMessage = 'Passwords do not match.');
+      return;
+    }
+    if (password.length < 6) {
+      setState(() => _errorMessage = 'Password must be at least 6 characters.');
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      // 1. Crear usuario en Firebase Auth
+      final credential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(email: email, password: password);
+
+      // 2. Guardar displayName
+      await credential.user?.updateDisplayName(name);
+
+      // 3. Resetear el PetProvider para que el nuevo usuario empiece en blanco
+      if (mounted) {
+        context.read<PetProvider>().reset();
+      }
+
+      // 4. El AuthGate en main.dart detectará automáticamente la sesión activa
+      //    y redirigirá a MainScreen — no hace falta navegar manualmente.
+    } on FirebaseAuthException catch (e) {
+      String msg;
+      switch (e.code) {
+        case 'email-already-in-use':
+          msg = 'An account with this email already exists.';
+          break;
+        case 'invalid-email':
+          msg = 'The email address is not valid.';
+          break;
+        case 'weak-password':
+          msg = 'Password must be at least 6 characters.';
+          break;
+        default:
+          msg = e.message ?? 'Registration failed. Please try again.';
+      }
+      if (mounted) setState(() => _errorMessage = msg);
+    } catch (e) {
+      if (mounted) setState(() => _errorMessage = 'Unexpected error: $e');
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,12 +110,8 @@ class RegistroScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-
                 /// LOGO
-                Image.asset(
-                  "assets/logo_hp.png",
-                  height: 80,
-                ),
+                Image.asset("assets/logo_hp.png", height: 80),
                 const SizedBox(height: 10),
                 Text(
                   "Happy Patitas",
@@ -75,102 +158,79 @@ class RegistroScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-
                           /// NAME
-                          Text("Name",
-                              style: TextStyle(
-                                color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
-                              )),
+                          _fieldLabel("Name", isDark),
                           const SizedBox(height: 6),
-                          TextField(
-                            style: TextStyle(
-                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
-                            ),
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: isDark
-                                  ? AppColors.surfaceDark.withValues(alpha: 0.8)
-                                  : Colors.white.withValues(alpha: 0.8),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
+                          _buildTextField(
+                            controller: _nameController,
+                            isDark: isDark,
+                            hint: 'Your name',
                           ),
 
                           const SizedBox(height: 20),
 
                           /// EMAIL
-                          Text("Email",
-                              style: TextStyle(
-                                color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
-                              )),
+                          _fieldLabel("Email", isDark),
                           const SizedBox(height: 6),
-                          TextField(
-                            style: TextStyle(
-                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
-                            ),
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: isDark
-                                  ? AppColors.surfaceDark.withValues(alpha: 0.8)
-                                  : Colors.white.withValues(alpha: 0.8),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
+                          _buildTextField(
+                            controller: _emailController,
+                            isDark: isDark,
+                            hint: 'example@email.com',
+                            keyboardType: TextInputType.emailAddress,
                           ),
 
                           const SizedBox(height: 20),
 
                           /// PASSWORD
-                          Text("Password",
-                              style: TextStyle(
-                                color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
-                              )),
+                          _fieldLabel("Password", isDark),
                           const SizedBox(height: 6),
-                          TextField(
+                          _buildTextField(
+                            controller: _passwordController,
+                            isDark: isDark,
+                            hint: '••••••••',
                             obscureText: true,
-                            style: TextStyle(
-                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
-                            ),
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: isDark
-                                  ? AppColors.surfaceDark.withValues(alpha: 0.8)
-                                  : Colors.white.withValues(alpha: 0.8),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
-                              ),
-                            ),
                           ),
 
                           const SizedBox(height: 20),
 
                           /// CONFIRM PASSWORD
-                          Text("Confirm Password",
-                              style: TextStyle(
-                                color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
-                              )),
+                          _fieldLabel("Confirm Password", isDark),
                           const SizedBox(height: 6),
-                          TextField(
+                          _buildTextField(
+                            controller: _confirmPasswordController,
+                            isDark: isDark,
+                            hint: '••••••••',
                             obscureText: true,
-                            style: TextStyle(
-                              color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
-                            ),
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: isDark
-                                  ? AppColors.surfaceDark.withValues(alpha: 0.8)
-                                  : Colors.white.withValues(alpha: 0.8),
-                              border: OutlineInputBorder(
+                          ),
+
+                          /// ERROR MESSAGE
+                          if (_errorMessage != null) ...[
+                            const SizedBox(height: 14),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              decoration: BoxDecoration(
+                                color: AppColors.errorRed.withValues(alpha: 0.12),
                                 borderRadius: BorderRadius.circular(10),
-                                borderSide: BorderSide.none,
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.error_outline,
+                                      color: AppColors.errorRed, size: 18),
+                                  const SizedBox(width: 8),
+                                  Expanded(
+                                    child: Text(
+                                      _errorMessage!,
+                                      style: const TextStyle(
+                                        color: AppColors.errorRed,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ),
+                          ],
 
                           const SizedBox(height: 25),
 
@@ -186,13 +246,20 @@ class RegistroScreen extends StatelessWidget {
                                 backgroundColor: AppColors.primaryBlue,
                                 foregroundColor: Colors.white,
                               ),
-                              onPressed: () {
-                                // TODO: lógica de registro
-                              },
-                              child: const Text(
-                                "Register",
-                                style: TextStyle(fontSize: 16),
-                              ),
+                              onPressed: _isLoading ? null : _register,
+                              child: _isLoading
+                                  ? const SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : const Text(
+                                      "Register",
+                                      style: TextStyle(fontSize: 16),
+                                    ),
                             ),
                           ),
 
@@ -201,9 +268,7 @@ class RegistroScreen extends StatelessWidget {
                           /// VOLVER AL LOGIN
                           Center(
                             child: TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
+                              onPressed: () => Navigator.pop(context),
                               child: Text(
                                 "Already have an account? Log in",
                                 style: TextStyle(
@@ -224,6 +289,46 @@ class RegistroScreen extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _fieldLabel(String text, bool isDark) => Text(
+        text,
+        style: TextStyle(
+          color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+        ),
+      );
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required bool isDark,
+    String? hint,
+    bool obscureText = false,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      style: TextStyle(
+        color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+      ),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: TextStyle(
+          color: isDark
+              ? AppColors.textSubDark.withValues(alpha: 0.5)
+              : AppColors.textSubLight.withValues(alpha: 0.6),
+        ),
+        filled: true,
+        fillColor: isDark
+            ? AppColors.surfaceDark.withValues(alpha: 0.8)
+            : Colors.white.withValues(alpha: 0.8),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide.none,
         ),
       ),
     );

@@ -31,4 +31,14 @@ class PetProvider extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  /// Limpia todos los datos del proveedor.
+  /// Llamar siempre al registrar un nuevo usuario para que empiece de cero.
+  void reset() {
+    _currentPet = null;
+    _activity = null;
+    _insights = [];
+    _isLoading = false;
+    notifyListeners();
+  }
 }

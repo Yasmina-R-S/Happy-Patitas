@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'main_screen.dart';
 import 'forgot_password_screen.dart';
+import 'registro_screen.dart';
 import '../utils/colors.dart';
 import '../providers/theme_provider.dart';
-import '../services/auth_service.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   @override
+<<<<<<< HEAD
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
@@ -38,35 +39,6 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _cargando = true);
     try {
       await _authService.iniciarSesion(email: email, password: password);
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const MainScreen()),
-        );
-      }
-    } catch (e) {
-      if (mounted) _mostrarError(e.toString().replaceFirst('Exception: ', ''));
-    } finally {
-      if (mounted) setState(() => _cargando = false);
-    }
-  }
-
-  Future<void> _registrarse() async {
-    final email = _emailController.text.trim();
-    final password = _passwordController.text;
-    if (email.isEmpty || password.isEmpty) {
-      _mostrarError('Por favor, rellena todos los campos.');
-      return;
-    }
-    setState(() => _cargando = true);
-    try {
-      await _authService.registrarUsuario(email: email, password: password);
-      if (mounted) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (_) => const MainScreen()),
-        );
-      }
     } catch (e) {
       if (mounted) _mostrarError(e.toString().replaceFirst('Exception: ', ''));
     } finally {
@@ -86,6 +58,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   @override
+=======
+>>>>>>> 51b4681e10c248d5e469a69a77328dc761a34e71
   Widget build(BuildContext context) {
     final isDark = context.watch<ThemeProvider>().themeMode == ThemeMode.dark ||
         (context.watch<ThemeProvider>().themeMode == ThemeMode.system &&
@@ -101,10 +75,14 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
+
                 /// LOGO
                 Column(
                   children: [
-                    Image.asset("assets/logo_hp.png", height: 80),
+                    Image.asset(
+                      "assets/logo_hp.png",
+                      height: 80,
+                    ),
                     const SizedBox(height: 10),
                     Text(
                       "Happy Patitas",
@@ -116,7 +94,10 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ],
                 ),
+
                 const SizedBox(height: 40),
+
+                /// TITULO
                 Text(
                   "LOGIN",
                   style: TextStyle(
@@ -125,7 +106,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
                   ),
                 ),
+
                 const SizedBox(height: 30),
+
                 /// FORMULARIO CON EFECTO CRISTAL
                 ClipRRect(
                   borderRadius: BorderRadius.circular(20),
@@ -145,28 +128,25 @@ class _LoginScreenState extends State<LoginScreen> {
                               : Colors.white.withValues(alpha: 0.4),
                         ),
                       ),
+
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          /// EMAIL
+
+                          /// USER
                           Text(
-                            "Correo electrónico",
+                            "User",
                             style: TextStyle(
                               color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
                             ),
                           ),
                           const SizedBox(height: 6),
+
                           TextField(
-                            controller: _emailController,
-                            keyboardType: TextInputType.emailAddress,
                             style: TextStyle(
                               color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
                             ),
                             decoration: InputDecoration(
-                              hintText: 'tu@correo.com',
-                              hintStyle: TextStyle(
-                                color: isDark ? Colors.white38 : Colors.black38,
-                              ),
                               filled: true,
                               fillColor: isDark
                                   ? AppColors.surfaceDark.withValues(alpha: 0.8)
@@ -175,29 +155,26 @@ class _LoginScreenState extends State<LoginScreen> {
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none,
                               ),
-                              prefixIcon: const Icon(Icons.email_outlined),
                             ),
                           ),
+
                           const SizedBox(height: 20),
+
                           /// PASSWORD
                           Text(
-                            "Contraseña",
+                            "Password",
                             style: TextStyle(
                               color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
                             ),
                           ),
                           const SizedBox(height: 6),
+
                           TextField(
-                            controller: _passwordController,
-                            obscureText: !_mostrarPassword,
+                            obscureText: true,
                             style: TextStyle(
                               color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
                             ),
                             decoration: InputDecoration(
-                              hintText: '••••••••',
-                              hintStyle: TextStyle(
-                                color: isDark ? Colors.white38 : Colors.black38,
-                              ),
                               filled: true,
                               fillColor: isDark
                                   ? AppColors.surfaceDark.withValues(alpha: 0.8)
@@ -206,21 +183,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none,
                               ),
-                              prefixIcon: const Icon(Icons.lock_outline),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  _mostrarPassword
-                                      ? Icons.visibility_off_outlined
-                                      : Icons.visibility_outlined,
-                                ),
-                                onPressed: () => setState(
-                                  () => _mostrarPassword = !_mostrarPassword,
-                                ),
-                              ),
                             ),
                           ),
+
                           const SizedBox(height: 25),
-                          /// BOTON ENTRAR
+
+                          /// BOTON LOGIN
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton(
@@ -232,6 +200,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 backgroundColor: AppColors.primaryBlue,
                                 foregroundColor: Colors.white,
                               ),
+<<<<<<< HEAD
                               onPressed: _cargando ? null : _entrar,
                               child: _cargando
                                   ? const SizedBox(
@@ -267,14 +236,28 @@ class _LoginScreenState extends State<LoginScreen> {
                                     ? AppColors.lightBlue
                                     : AppColors.primaryBlue,
                               ),
-                              onPressed: _cargando ? null : _registrarse,
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (_) => const RegistroScreen()),
+=======
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const MainScreen()),
+>>>>>>> 51b4681e10c248d5e469a69a77328dc761a34e71
+                                );
+                              },
                               child: const Text(
-                                "Registrarse",
+                                "Log in",
                                 style: TextStyle(fontSize: 16),
                               ),
                             ),
                           ),
+
                           const SizedBox(height: 10),
+
                           /// FORGOT PASSWORD
                           Center(
                             child: TextButton(
@@ -282,12 +265,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => const ForgotPasswordScreen(),
-                                  ),
+                                      builder: (context) =>
+                                      const ForgotPasswordScreen()),
                                 );
                               },
                               child: Text(
-                                "¿Olvidaste tu contraseña?",
+                                "Forgot password?",
                                 style: TextStyle(
                                   color: isDark
                                       ? AppColors.lightBlue
@@ -301,7 +284,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
               ],
             ),
           ),

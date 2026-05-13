@@ -26,7 +26,7 @@ class ActivityRing extends StatelessWidget {
           CircularProgressIndicator(
             value: 1.0,
             strokeWidth: size * 0.1,
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
           ),
           CircularProgressIndicator(
             value: percentage,

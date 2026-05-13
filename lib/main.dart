@@ -1,25 +1,32 @@
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'firebase_options.dart';
+import 'screens/icio_creen.dart';
 import 'providers/pet_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
-import 'screens/login_screen.dart';
-import 'screens/main_screen.dart';
 
+<<<<<<< HEAD
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // Cargar idioma persistido antes de arrancar la UI
+  final localeProvider = LocaleProvider();
+  await localeProvider.loadSavedLocale();
+
+  runApp(MyApp(localeProvider: localeProvider));
+=======
+void main() {
   runApp(const MyApp());
+>>>>>>> 51b4681e10c248d5e469a69a77328dc761a34e71
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final LocaleProvider localeProvider;
+  const MyApp({super.key, required this.localeProvider});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +34,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => PetProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        ChangeNotifierProvider.value(value: localeProvider),
       ],
       child: Consumer2<ThemeProvider, LocaleProvider>(
         builder: (context, themeProvider, localeProvider, child) {
@@ -57,14 +64,18 @@ class MyApp extends StatelessWidget {
               colorSchemeSeed: const Color(0xFF1976D2),
               useMaterial3: true,
             ),
-            // AuthGate decide la pantalla inicial según si hay sesión activa
+<<<<<<< HEAD
             home: const AuthGate(),
+=======
+            home: const icioScreen(),
+>>>>>>> 51b4681e10c248d5e469a69a77328dc761a34e71
           );
         },
       ),
     );
   }
 }
+<<<<<<< HEAD
 
 /// Escucha el stream de autenticación y redirige según el estado
 class AuthGate extends StatelessWidget {
@@ -75,17 +86,12 @@ class AuthGate extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        // Mientras Firebase comprueba el estado, mostramos un splash mínimo
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const _SplashCargando();
         }
-
-        // Si hay usuario autenticado → pantalla principal
         if (snapshot.hasData && snapshot.data != null) {
           return const MainScreen();
         }
-
-        // Si no hay sesión → pantalla de login
         return const LoginScreen();
       },
     );
@@ -98,9 +104,9 @@ class _SplashCargando extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
+      body: Center(child: CircularProgressIndicator()),
     );
   }
 }
+=======
+>>>>>>> 51b4681e10c248d5e469a69a77328dc761a34e71

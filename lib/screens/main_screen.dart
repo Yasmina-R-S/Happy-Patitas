@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'map_screen.dart';
 import 'health_screen.dart';
 import 'pets_screen.dart';
 import 'settings_screen.dart';
 import '../utils/colors.dart';
-import '../providers/theme_provider.dart';
 
 /// InheritedWidget que expone el callback goHome() a cualquier widget
 /// descendiente, sin necesidad de pasar parámetros por constructor.

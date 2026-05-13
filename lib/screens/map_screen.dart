@@ -59,8 +59,10 @@ class _MapScreenState extends State<MapScreen> {
       if (permission == LocationPermission.deniedForever) return;
 
       Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high,
-        timeLimit: const Duration(seconds: 8),
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 8),
+        ),
       );
 
       if (mounted) {
@@ -97,7 +99,7 @@ class _MapScreenState extends State<MapScreen> {
           borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.15),
+              color: Colors.black.withValues(alpha: 0.15),
               blurRadius: 20,
               offset: const Offset(0, -5),
             ),
@@ -111,7 +113,7 @@ class _MapScreenState extends State<MapScreen> {
               child: Container(
                 width: 40, height: 4,
                 decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.3),
+                  color: Colors.grey.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
@@ -122,7 +124,7 @@ class _MapScreenState extends State<MapScreen> {
                 Container(
                   width: 60, height: 60,
                   decoration: BoxDecoration(
-                    color: (pet['color'] as Color).withOpacity(0.15),
+                    color: (pet['color'] as Color).withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(Icons.pets, color: pet['color'] as Color, size: 30),
@@ -214,7 +216,7 @@ class _MapScreenState extends State<MapScreen> {
                           border: Border.all(color: Colors.white, width: 3),
                           boxShadow: [
                             BoxShadow(
-                              color: AppColors.primaryBlue.withOpacity(0.4),
+                              color: AppColors.primaryBlue.withValues(alpha: 0.4),
                               blurRadius: 10,
                               spreadRadius: 2,
                             ),
@@ -242,7 +244,7 @@ class _MapScreenState extends State<MapScreen> {
                           border: Border.all(color: Colors.white, width: 3),
                           boxShadow: [
                             BoxShadow(
-                              color: (pet['color'] as Color).withOpacity(0.4),
+                              color: (pet['color'] as Color).withValues(alpha: 0.4),
                               blurRadius: 8,
                               spreadRadius: 1,
                             ),
@@ -270,7 +272,7 @@ class _MapScreenState extends State<MapScreen> {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
                   colors: [
-                    Colors.black.withOpacity(0.45),
+                    Colors.black.withValues(alpha: 0.45),
                     Colors.transparent,
                   ],
                 ),
@@ -310,7 +312,7 @@ class _MapScreenState extends State<MapScreen> {
                   onPressed: () => setState(() => _isSatellite = !_isSatellite),
                   backgroundColor:
                       (isDark ? AppColors.surfaceDark : AppColors.surfaceLight)
-                          .withOpacity(0.95),
+                          .withValues(alpha: 0.95),
                   child: Icon(
                     _isSatellite ? Icons.map_rounded : Icons.layers_rounded,
                     color: AppColors.primaryBlue,

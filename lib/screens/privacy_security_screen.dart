@@ -16,8 +16,6 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -127,7 +125,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
         color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.05) : AppColors.ultraLightBlue,
+          color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.ultraLightBlue,
         ),
       ),
       child: Row(
@@ -135,7 +133,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppColors.primaryBlue.withOpacity(0.1),
+              color: AppColors.primaryBlue.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: AppColors.primaryBlue, size: 20),
@@ -159,7 +157,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
               ],
             ),
           ),
-          Switch(value: value, onChanged: onChanged, activeColor: AppColors.primaryBlue),
+          Switch(value: value, onChanged: onChanged, activeThumbColor: AppColors.primaryBlue),
         ],
       ),
     );
@@ -185,9 +183,9 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isDestructive
-                ? AppColors.errorRed.withOpacity(0.2)
+                ? AppColors.errorRed.withValues(alpha: 0.2)
                 : isDark
-                    ? Colors.white.withOpacity(0.05)
+                    ? Colors.white.withValues(alpha: 0.05)
                     : AppColors.ultraLightBlue,
           ),
         ),
@@ -196,7 +194,7 @@ class _PrivacySecurityScreenState extends State<PrivacySecurityScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: color.withOpacity(0.1),
+                color: color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: color, size: 20),
