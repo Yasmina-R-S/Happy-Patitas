@@ -5,8 +5,8 @@ import 'registro_screen.dart';
 import '../utils/colors.dart';
 import '../providers/theme_provider.dart';
 
-class icioScreen extends StatelessWidget {
-  const icioScreen({super.key});
+class InicioScreen extends StatelessWidget {
+  const InicioScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

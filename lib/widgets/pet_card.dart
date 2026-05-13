@@ -24,13 +24,13 @@ class PetCard extends StatelessWidget {
           boxShadow: [
             if (!isDark)
               BoxShadow(
-                color: AppColors.primaryBlue.withOpacity(0.05),
+                color: AppColors.primaryBlue.withValues(alpha: 0.05),
                 blurRadius: 20,
                 offset: const Offset(0, 10),
               ),
           ],
           border: Border.all(
-            color: isDark ? Colors.white.withOpacity(0.05) : AppColors.ultraLightBlue,
+            color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.ultraLightBlue,
           ),
         ),
         child: Row(
@@ -47,7 +47,7 @@ class PetCard extends StatelessWidget {
                   errorBuilder: (context, error, stackTrace) => Container(
                     width: 80,
                     height: 80,
-                    color: AppColors.primaryBlue.withOpacity(0.1),
+                    color: AppColors.primaryBlue.withValues(alpha: 0.1),
                     child: const Icon(Icons.pets, color: AppColors.primaryBlue),
                   ),
                   loadingBuilder: (context, child, loadingProgress) {
@@ -87,8 +87,8 @@ class PetCard extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: pet.deviceStatus == "Online"
-                              ? AppColors.statusHappy.withOpacity(0.1)
-                              : AppColors.textSubLight.withOpacity(0.1),
+                              ? AppColors.statusHappy.withValues(alpha: 0.1)
+                              : AppColors.textSubLight.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Text(

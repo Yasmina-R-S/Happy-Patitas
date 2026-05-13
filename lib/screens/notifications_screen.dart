@@ -18,8 +18,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -120,7 +118,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.05) : AppColors.ultraLightBlue,
+          color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.ultraLightBlue,
         ),
       ),
       child: Row(
@@ -128,7 +126,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppColors.primaryBlue.withOpacity(0.1),
+              color: AppColors.primaryBlue.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: AppColors.primaryBlue, size: 20),
@@ -159,7 +157,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: AppColors.primaryBlue,
+            activeThumbColor: AppColors.primaryBlue,
           ),
         ],
       ),

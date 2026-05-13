@@ -57,7 +57,7 @@ class BodyTempScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Text(
@@ -88,7 +88,7 @@ class BodyTempScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
                   color: isDark
-                      ? Colors.white.withOpacity(0.05)
+                      ? Colors.white.withValues(alpha: 0.05)
                       : AppColors.ultraLightBlue,
                 ),
               ),
@@ -137,7 +137,7 @@ class BodyTempScreen extends StatelessWidget {
                       dotData: const FlDotData(show: false),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: Colors.orange.withOpacity(0.1),
+                        color: Colors.orange.withValues(alpha: 0.1),
                       ),
                     ),
                     // Normal range line
@@ -147,7 +147,7 @@ class BodyTempScreen extends StatelessWidget {
                         FlSpot(5, 38.5),
                       ],
                       isCurved: false,
-                      color: Colors.red.withOpacity(0.4),
+                      color: Colors.red.withValues(alpha: 0.4),
                       barWidth: 1,
                       dashArray: [5, 5],
                       dotData: const FlDotData(show: false),
@@ -181,9 +181,9 @@ class BodyTempScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.1),
+                color: Colors.orange.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [
@@ -214,7 +214,7 @@ class BodyTempScreen extends StatelessWidget {
         color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.05) : AppColors.ultraLightBlue,
+          color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.ultraLightBlue,
         ),
       ),
       child: Column(

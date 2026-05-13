@@ -30,8 +30,6 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -89,9 +87,9 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
           color: connected
-              ? AppColors.statusHappy.withOpacity(0.3)
+              ? AppColors.statusHappy.withValues(alpha: 0.3)
               : isDark
-                  ? Colors.white.withOpacity(0.05)
+                  ? Colors.white.withValues(alpha: 0.05)
                   : AppColors.ultraLightBlue,
         ),
       ),
@@ -103,7 +101,7 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: AppColors.primaryBlue.withOpacity(0.1),
+                  color: AppColors.primaryBlue.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: const Icon(Icons.bluetooth_rounded,
@@ -136,7 +134,7 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
                   color: (connected ? AppColors.statusHappy : AppColors.textSubLight)
-                      .withOpacity(0.1),
+                      .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(
@@ -156,7 +154,7 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
               Icon(Icons.battery_full_rounded, size: 16, color: batteryColor),
               const SizedBox(width: 4),
               Text(
-                "${battery}%",
+                "$battery%",
                 style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -222,7 +220,7 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
           color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isDark ? Colors.white.withOpacity(0.05) : AppColors.ultraLightBlue,
+            color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.ultraLightBlue,
           ),
         ),
         child: Row(
@@ -230,7 +228,7 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppColors.primaryBlue.withOpacity(0.1),
+                color: AppColors.primaryBlue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: AppColors.primaryBlue, size: 20),

@@ -57,7 +57,7 @@ class HeartRateScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Text(
@@ -88,7 +88,7 @@ class HeartRateScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
                   color: isDark
-                      ? Colors.white.withOpacity(0.05)
+                      ? Colors.white.withValues(alpha: 0.05)
                       : AppColors.ultraLightBlue,
                 ),
               ),
@@ -135,7 +135,7 @@ class HeartRateScreen extends StatelessWidget {
                       dotData: const FlDotData(show: false),
                       belowBarData: BarAreaData(
                         show: true,
-                        color: Colors.red.withOpacity(0.1),
+                        color: Colors.red.withValues(alpha: 0.1),
                       ),
                     ),
                   ],
@@ -176,7 +176,7 @@ class HeartRateScreen extends StatelessWidget {
         color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.05) : AppColors.ultraLightBlue,
+          color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.ultraLightBlue,
         ),
       ),
       child: Column(

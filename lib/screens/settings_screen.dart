@@ -115,7 +115,7 @@ class SettingsScreen extends StatelessWidget {
             actionWidget: Switch(
               value: themeProvider.isDarkMode,
               onChanged: (_) => themeProvider.toggleTheme(),
-              activeColor: AppColors.primaryBlue,
+              activeThumbColor: AppColors.primaryBlue,
             ),
             onTap: () => themeProvider.toggleTheme(),
           ),
@@ -246,7 +246,7 @@ class SettingsScreen extends StatelessWidget {
                         horizontal: 16, vertical: 14),
                     decoration: BoxDecoration(
                       color: isSelected
-                          ? AppColors.primaryBlue.withOpacity(0.12)
+                          ? AppColors.primaryBlue.withValues(alpha: 0.12)
                           : (isDark
                               ? AppColors.surfaceDark
                               : AppColors.surfaceLight),
@@ -255,7 +255,7 @@ class SettingsScreen extends StatelessWidget {
                         color: isSelected
                             ? AppColors.primaryBlue
                             : (isDark
-                                ? Colors.white.withOpacity(0.05)
+                                ? Colors.white.withValues(alpha: 0.05)
                                 : AppColors.ultraLightBlue),
                         width: isSelected ? 1.5 : 1,
                       ),
@@ -337,7 +337,7 @@ class SettingsScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: isDark
-                ? Colors.white.withOpacity(0.05)
+                ? Colors.white.withValues(alpha: 0.05)
                 : AppColors.ultraLightBlue,
           ),
         ),
@@ -346,7 +346,7 @@ class SettingsScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AppColors.primaryBlue.withOpacity(0.1),
+                color: AppColors.primaryBlue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(icon, color: AppColors.primaryBlue, size: 20),

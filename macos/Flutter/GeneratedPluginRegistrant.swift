@@ -5,30 +5,18 @@
 import FlutterMacOS
 import Foundation
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 import cloud_firestore
+import file_selector_macos
 import firebase_auth
 import firebase_core
-=======
-import file_selector_macos
->>>>>>> parent of 08277e3 (Cambio NO ACABADOS (FIREBASE))
-=======
-import file_selector_macos
->>>>>>> parent of 08277e3 (Cambio NO ACABADOS (FIREBASE))
 import geolocator_apple
+import path_provider_foundation
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-<<<<<<< HEAD
-<<<<<<< HEAD
   FLTFirebaseFirestorePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseFirestorePlugin"))
+  FileSelectorPlugin.register(with: registry.registrar(forPlugin: "FileSelectorPlugin"))
   FLTFirebaseAuthPlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseAuthPlugin"))
   FLTFirebaseCorePlugin.register(with: registry.registrar(forPlugin: "FLTFirebaseCorePlugin"))
-=======
-  FileSelectorPlugin.register(with: registry.registrar(forPlugin: "FileSelectorPlugin"))
->>>>>>> parent of 08277e3 (Cambio NO ACABADOS (FIREBASE))
-=======
-  FileSelectorPlugin.register(with: registry.registrar(forPlugin: "FileSelectorPlugin"))
->>>>>>> parent of 08277e3 (Cambio NO ACABADOS (FIREBASE))
   GeolocatorPlugin.register(with: registry.registrar(forPlugin: "GeolocatorPlugin"))
+  PathProviderPlugin.register(with: registry.registrar(forPlugin: "PathProviderPlugin"))
 }

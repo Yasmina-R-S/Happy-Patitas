@@ -58,7 +58,7 @@ class SleepQualityScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Text(
@@ -89,7 +89,7 @@ class SleepQualityScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
                   color: isDark
-                      ? Colors.white.withOpacity(0.05)
+                      ? Colors.white.withValues(alpha: 0.05)
                       : AppColors.ultraLightBlue,
                 ),
               ),
@@ -182,7 +182,7 @@ class SleepQualityScreen extends StatelessWidget {
         color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.05) : AppColors.ultraLightBlue,
+          color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.ultraLightBlue,
         ),
       ),
       child: Row(
@@ -202,7 +202,7 @@ class SleepQualityScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(8),
               child: LinearProgressIndicator(
                 value: score / 100,
-                backgroundColor: Colors.indigo.withOpacity(0.1),
+                backgroundColor: Colors.indigo.withValues(alpha: 0.1),
                 valueColor: AlwaysStoppedAnimation<Color>(
                   score >= 90 ? Colors.green : score >= 75 ? Colors.indigo : Colors.orange,
                 ),

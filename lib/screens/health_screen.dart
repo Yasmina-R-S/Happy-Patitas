@@ -198,7 +198,7 @@ class HealthScreen extends StatelessWidget {
           color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isDark ? Colors.white.withOpacity(0.05) : AppColors.ultraLightBlue,
+            color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.ultraLightBlue,
           ),
         ),
         child: Row(

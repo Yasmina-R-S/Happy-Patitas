@@ -6,12 +6,27 @@ import 'providers/pet_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
 
+<<<<<<< HEAD
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // Cargar idioma persistido antes de arrancar la UI
+  final localeProvider = LocaleProvider();
+  await localeProvider.loadSavedLocale();
+
+  runApp(MyApp(localeProvider: localeProvider));
+=======
 void main() {
   runApp(const MyApp());
+>>>>>>> 51b4681e10c248d5e469a69a77328dc761a34e71
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final LocaleProvider localeProvider;
+  const MyApp({super.key, required this.localeProvider});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +34,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => PetProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
-        ChangeNotifierProvider(create: (_) => LocaleProvider()),
+        ChangeNotifierProvider.value(value: localeProvider),
       ],
       child: Consumer2<ThemeProvider, LocaleProvider>(
         builder: (context, themeProvider, localeProvider, child) {
@@ -49,10 +64,49 @@ class MyApp extends StatelessWidget {
               colorSchemeSeed: const Color(0xFF1976D2),
               useMaterial3: true,
             ),
+<<<<<<< HEAD
+            home: const AuthGate(),
+=======
             home: const icioScreen(),
+>>>>>>> 51b4681e10c248d5e469a69a77328dc761a34e71
           );
         },
       ),
     );
   }
 }
+<<<<<<< HEAD
+
+/// Escucha el stream de autenticación y redirige según el estado
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const _SplashCargando();
+        }
+        if (snapshot.hasData && snapshot.data != null) {
+          return const MainScreen();
+        }
+        return const LoginScreen();
+      },
+    );
+  }
+}
+
+class _SplashCargando extends StatelessWidget {
+  const _SplashCargando();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Center(child: CircularProgressIndicator()),
+    );
+  }
+}
+=======
+>>>>>>> 51b4681e10c248d5e469a69a77328dc761a34e71
