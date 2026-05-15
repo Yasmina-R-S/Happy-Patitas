@@ -28,13 +28,12 @@ class AppColors {
 
   // Gradients
   static const LinearGradient primaryGradient = LinearGradient(
-    begin: Alignment.bottomLeft,
-    end: Alignment.topRight,
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
     colors: [
-      primaryBlue,
-      lightBlue,
-      ultraLightBlue,
-      pureWhite,
+      Color(0xFFE3F2FD), // azul muy clarito arriba
+      Color(0xFFEEF7FF), // casi blanco azulado centro
+      Color(0xFFF5FAFE), // blanco con toque azul abajo
     ],
   );
 

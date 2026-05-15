@@ -122,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(
                     fontSize: 36,
                     fontWeight: FontWeight.bold,
-                    color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
+                    color: isDark ? AppColors.textMainDark : AppColors.primaryBlue,
                   ),
                 ),
                 const SizedBox(height: 30),
@@ -137,13 +137,22 @@ class _LoginScreenState extends State<LoginScreen> {
                       decoration: BoxDecoration(
                         color: isDark
                             ? Colors.white.withValues(alpha: 0.07)
-                            : Colors.white.withValues(alpha: 0.25),
+                            : Colors.white.withValues(alpha: 0.75),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
                           color: isDark
                               ? Colors.white.withValues(alpha: 0.12)
-                              : Colors.white.withValues(alpha: 0.4),
+                              : AppColors.lightBlue.withValues(alpha: 0.6),
                         ),
+                        boxShadow: isDark
+                            ? []
+                            : [
+                                BoxShadow(
+                                  color: AppColors.primaryBlue.withOpacity(0.07),
+                                  blurRadius: 24,
+                                  offset: const Offset(0, 8),
+                                ),
+                              ],
                       ),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
