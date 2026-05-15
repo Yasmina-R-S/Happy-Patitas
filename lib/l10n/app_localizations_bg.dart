@@ -9,5 +9,17 @@ class AppLocalizationsBg extends AppLocalizations {
   AppLocalizationsBg([String locale = 'bg']) : super(locale);
 
   @override
-  String get appTitle => 'Приложение';
+  String get settings => 'Настройки';
+
+  @override
+  String get language => 'Език';
+
+  @override
+  String get logout => 'Изход';
+
+  @override
+  String get home => 'Начало';
+
+  @override
+  String get support => 'Поддръжка';
 }

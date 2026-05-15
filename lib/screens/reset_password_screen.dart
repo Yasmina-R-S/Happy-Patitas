@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../utils/translations.dart';
 import '../utils/colors.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
@@ -19,10 +20,12 @@ class ResetPasswordScreen extends StatelessWidget {
               children: [
                 /// LOGO
                 Image.asset("assets/logo_hp.png", height: 80),
+
                 const SizedBox(height: 10),
-                const Text(
-                  "Happy Patitas",
-                  style: TextStyle(
+
+                Text(
+                  T.of(context, 'happy_patitas'),
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textMainLight,
@@ -32,10 +35,10 @@ class ResetPasswordScreen extends StatelessWidget {
                 const SizedBox(height: 40),
 
                 /// TITULO
-                const Text(
-                  "CAMBIAR CONTRASEÑA",
+                Text(
+                  T.of(context, 'cambiar_contrase_a'),
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: AppColors.textMainLight,
@@ -44,13 +47,13 @@ class ResetPasswordScreen extends StatelessWidget {
 
                 const SizedBox(height: 20),
 
-                /// DESCRIPCION 1
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 40),
+                /// DESCRIPCION
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
                   child: Text(
-                    "Elige una contraseña segura y única.\nAl cambiarla, se cerrará tu sesión en otros dispositivos.",
+                    T.of(context, 'descripcion_cambio_password'),
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 14,
                       color: AppColors.textMainLight,
                     ),
@@ -59,17 +62,21 @@ class ResetPasswordScreen extends StatelessWidget {
 
                 const SizedBox(height: 30),
 
-                /// PRIMER CAMPO (PASSWORD NUEVA)
+                /// PASSWORD NUEVA
                 _buildGlassBox(
                   context,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Contraseña Nueva",
-                        style: TextStyle(color: AppColors.textMainLight),
+                      Text(
+                        T.of(context, 'contrase_a_nueva'),
+                        style: const TextStyle(
+                          color: AppColors.textMainLight,
+                        ),
                       ),
+
                       const SizedBox(height: 6),
+
                       TextField(
                         obscureText: true,
                         decoration: InputDecoration(
@@ -88,24 +95,31 @@ class ResetPasswordScreen extends StatelessWidget {
                 const SizedBox(height: 15),
 
                 /// TEXTO INTERMEDIO
-                const Text(
-                  "Debe tener al menos 8 caracteres.",
-                  style: TextStyle(color: AppColors.textMainLight, fontSize: 13),
+                Text(
+                  T.of(context, 'password_minimo'),
+                  style: const TextStyle(
+                    color: AppColors.textMainLight,
+                    fontSize: 13,
+                  ),
                 ),
 
                 const SizedBox(height: 15),
 
-                /// SEGUNDO CAMPO (CONFIRMAR)
+                /// CONFIRMAR PASSWORD
                 _buildGlassBox(
                   context,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        "Confirmar la nueva Contraseña",
-                        style: TextStyle(color: AppColors.textMainLight),
+                      Text(
+                        T.of(context, 'confirmar_contrase_a'),
+                        style: const TextStyle(
+                          color: AppColors.textMainLight,
+                        ),
                       ),
+
                       const SizedBox(height: 6),
+
                       TextField(
                         obscureText: true,
                         decoration: InputDecoration(
@@ -117,20 +131,23 @@ class ResetPasswordScreen extends StatelessWidget {
                           ),
                         ),
                       ),
+
                       const SizedBox(height: 20),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           TextButton(
                             onPressed: () => Navigator.pop(context),
-                            child: const Text(
-                              "Cancel",
-                              style: TextStyle(
+                            child: Text(
+                              T.of(context, 'cancel'),
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                           ),
+
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primaryBlue,
@@ -140,15 +157,23 @@ class ResetPasswordScreen extends StatelessWidget {
                               ),
                             ),
                             onPressed: () {
-                              // TODO: Lógica de cambio
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text("Contraseña cambiada")),
+                                SnackBar(
+                                  content: Text(
+                                    T.of(
+                                      context,
+                                      'contrase_a_cambiada',
+                                    ),
+                                  ),
+                                ),
                               );
+
                               Navigator.of(context)
                                   .popUntil((route) => route.isFirst);
                             },
-                            child: const Text("Cambiar"),
+                            child: Text(
+                              T.of(context, 'cambiar'),
+                            ),
                           ),
                         ],
                       ),
@@ -163,11 +188,17 @@ class ResetPasswordScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildGlassBox(BuildContext context, {required Widget child}) {
+  Widget _buildGlassBox(
+      BuildContext context, {
+        required Widget child,
+      }) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+        filter: ImageFilter.blur(
+          sigmaX: 12,
+          sigmaY: 12,
+        ),
         child: Container(
           width: 320,
           padding: const EdgeInsets.all(20),

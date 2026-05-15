@@ -9,5 +9,17 @@ class AppLocalizationsCa extends AppLocalizations {
   AppLocalizationsCa([String locale = 'ca']) : super(locale);
 
   @override
-  String get appTitle => 'Aplicació';
+  String get settings => 'Configuració';
+
+  @override
+  String get language => 'Idioma';
+
+  @override
+  String get logout => 'Tancar sessió';
+
+  @override
+  String get home => 'Inici';
+
+  @override
+  String get support => 'Suport';
 }

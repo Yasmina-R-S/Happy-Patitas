@@ -102,11 +102,35 @@ abstract class AppLocalizations {
     Locale('es'),
   ];
 
-  /// No description provided for @appTitle.
+  /// No description provided for @settings.
   ///
-  /// In en, this message translates to:
-  /// **'App'**
-  String get appTitle;
+  /// In es, this message translates to:
+  /// **'Configuración'**
+  String get settings;
+
+  /// No description provided for @language.
+  ///
+  /// In es, this message translates to:
+  /// **'Idioma'**
+  String get language;
+
+  /// No description provided for @logout.
+  ///
+  /// In es, this message translates to:
+  /// **'Cerrar sesión'**
+  String get logout;
+
+  /// No description provided for @home.
+  ///
+  /// In es, this message translates to:
+  /// **'Inicio'**
+  String get home;
+
+  /// No description provided for @support.
+  ///
+  /// In es, this message translates to:
+  /// **'Soporte'**
+  String get support;
 }
 
 class _AppLocalizationsDelegate

@@ -6,6 +6,7 @@ import 'pets_screen.dart';
 import 'settings_screen.dart';
 import '../utils/colors.dart';
 import '../providers/theme_provider.dart';
+import '../utils/translations.dart';
 
 /// InheritedWidget que expone el callback goHome() a cualquier widget
 /// descendiente, sin necesidad de pasar parámetros por constructor.
@@ -94,22 +95,22 @@ class _MainScreenState extends State<MainScreen> {
             selectedItemColor: AppColors.primaryBlue,
             unselectedItemColor: AppColors.textSubLight,
             showUnselectedLabels: true,
-            items: const [
+            items: [
               BottomNavigationBarItem(
-                icon: Icon(Icons.home_rounded),
-                label: 'Home',
+                icon: const Icon(Icons.home_rounded),
+                label: T.of(context, 'home'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.map_rounded),
-                label: 'Map',
+                icon: const Icon(Icons.map_rounded),
+                label: T.of(context, 'map'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.favorite_rounded),
-                label: 'Health',
+                icon: const Icon(Icons.favorite_rounded),
+                label: T.of(context, 'health'),
               ),
               BottomNavigationBarItem(
-                icon: Icon(Icons.settings_rounded),
-                label: 'Settings',
+                icon: const Icon(Icons.settings_rounded),
+                label: T.of(context, 'settings'),
               ),
             ],
           ),

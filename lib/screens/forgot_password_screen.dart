@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import '../utils/translations.dart';
 import 'reset_password_screen.dart';
 import '../utils/colors.dart';
 
@@ -132,7 +133,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                                     ),
                                   );
                                 },
-                                child: const Text("Siguiente"),
+                                child: Text(T.of(context, 'siguiente')),
                               ),
                             ],
                           ),

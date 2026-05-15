@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/pet_provider.dart';
 import '../utils/colors.dart';
+import '../utils/translations.dart';
 import '../widgets/ai_insight_card.dart';
 import '../widgets/pet_mood_widget.dart';
 import '../widgets/info_card.dart';
@@ -97,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            pet?.name ?? "Loading...",
+                            pet?.name ?? T.of(context, 'loading'),
                             style: TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
@@ -125,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   // AI Insights Section
                   Text(
-                    "AI INSIGHTS",
+                    T.of(context, 'ai_insights'),
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
@@ -140,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   // Activity Summary
                   Text(
-                    "ACTIVITY SUMMARY",
+                    T.of(context, 'activity_summary'),
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
@@ -153,9 +154,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Expanded(
                         child: InfoCard(
-                          title: "STEPS",
+                          title: T.of(context, 'steps').toUpperCase(),
                           value: activity?.steps.toString() ?? "0",
-                          unit: "steps",
+                          unit: T.of(context, 'steps'),
                           icon: Icons.directions_walk_rounded,
                           color: Colors.orange,
                         ),
@@ -163,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: InfoCard(
-                          title: "CALORIES",
+                          title: T.of(context, 'calories').toUpperCase(),
                           value: activity?.calories.toInt().toString() ?? "0",
                           unit: "kcal",
                           icon: Icons.local_fire_department_rounded,
@@ -177,7 +178,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     children: [
                       Expanded(
                         child: InfoCard(
-                          title: "ACTIVE",
+                          title: T.of(context, 'active').toUpperCase(),
                           value: activity?.activeMinutes.toString() ?? "0",
                           unit: "min",
                           icon: Icons.timer_rounded,
@@ -187,7 +188,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const SizedBox(width: 16),
                       Expanded(
                         child: InfoCard(
-                          title: "SLEEP",
+                          title: T.of(context, 'sleep').toUpperCase(),
                           value: "8.5",
                           unit: "hrs",
                           icon: Icons.nights_stay_rounded,
@@ -201,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                   // Quick Actions
                   Text(
-                    "QUICK ACTIONS",
+                    T.of(context, 'quick_actions'),
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
@@ -216,25 +217,25 @@ class _HomeScreenState extends State<HomeScreen> {
                       _buildQuickAction(
                         context,
                         Icons.location_on_rounded,
-                        "Locate",
+                        T.of(context, 'locate'),
                         AppColors.primaryBlue,
                       ),
                       _buildQuickAction(
                         context,
                         Icons.lightbulb_rounded,
-                        "Light",
+                        T.of(context, 'light'),
                         Colors.amber,
                       ),
                       _buildQuickAction(
                         context,
                         Icons.volume_up_rounded,
-                        "Alert",
+                        T.of(context, 'alert'),
                         Colors.purple,
                       ),
                       _buildQuickAction(
                         context,
                         Icons.security_rounded,
-                        "Lost Mode",
+                        T.of(context, 'lost_mode'),
                         AppColors.errorRed,
                       ),
                     ],
