@@ -65,7 +65,6 @@ class MyApp extends StatelessWidget {
               colorSchemeSeed: const Color(0xFF1976D2),
               useMaterial3: true,
             ),
-            // AuthGate decide la pantalla inicial según si hay sesión activa
             home: const AuthGate(),
           );
         },
@@ -74,7 +73,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// Escucha el stream de autenticación y redirige según el estado
 class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
 
@@ -84,6 +82,18 @@ class AuthGate extends StatefulWidget {
 
 class _AuthGateState extends State<AuthGate> {
   String? _lastUid;
+
+  void _onUserLoggedIn(String uid) {
+    // Pasamos el uid directamente para evitar condición de carrera con
+    // FirebaseAuth.instance.currentUser dentro del provider
+    context.read<UserProvider>().fetchUserProfile(uid);
+    context.read<PetFirebaseProvider>().fetchPets(uid: uid);
+  }
+
+  void _onUserLoggedOut() {
+    context.read<UserProvider>().clearUser();
+    context.read<PetFirebaseProvider>().clearPets();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -95,15 +105,14 @@ class _AuthGateState extends State<AuthGate> {
         }
 
         final user = snapshot.data;
+
         if (user != null) {
-          // Si el UID cambió o es la primera vez, disparamos la carga
           if (_lastUid != user.uid) {
             _lastUid = user.uid;
+            // Usamos addPostFrameCallback para no llamar setState/notifyListeners
+            // durante el build, pero el uid ya está capturado de forma segura
             WidgetsBinding.instance.addPostFrameCallback((_) {
-              if (mounted) {
-                context.read<UserProvider>().fetchUserProfile(user.uid);
-                context.read<PetFirebaseProvider>().fetchPets();
-              }
+              debugPrint("AuthGate: login detectado uid=${user.uid}"); if (mounted) _onUserLoggedIn(user.uid);
             });
           }
 
@@ -117,7 +126,14 @@ class _AuthGateState extends State<AuthGate> {
           );
         }
 
-        _lastUid = null;
+        // Logout: reset _lastUid síncronamente para que el próximo
+        // login siempre dispare _onUserLoggedIn
+        if (_lastUid != null) {
+          _lastUid = null;
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (mounted) _onUserLoggedOut();
+          });
+        }
         return const LoginScreen();
       },
     );

@@ -7,7 +7,6 @@ import '../providers/pet_firebase_provider.dart';
 import '../utils/colors.dart';
 import 'pet_profile_screen.dart';
 import 'collar_management_screen.dart';
-import 'login_screen.dart';
 
 class PetsScreen extends StatefulWidget {
   const PetsScreen({super.key});
@@ -41,19 +40,11 @@ class _PetsScreenState extends State<PetsScreen> {
         actions: [
           IconButton(
             onPressed: () async {
-              // Limpiar estados antes de salir
-              context.read<UserProvider>().clearUser();
-              context.read<PetFirebaseProvider>().clearPets();
-              
-              // Cerrar sesión en Firebase
+              // Solo cerrar sesión en Firebase.
+              // AuthGate escucha authStateChanges y redirigirá
+              // automáticamente a LoginScreen, garantizando que
+              // al volver a iniciar sesión se llame fetchPets() de nuevo.
               await FirebaseAuth.instance.signOut();
-
-              if (context.mounted) {
-                Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (_) => const LoginScreen()),
-                  (route) => false,
-                );
-              }
             },
             icon: const Icon(Icons.logout_rounded),
             tooltip: 'Cerrar Sesión',

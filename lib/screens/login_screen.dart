@@ -1,13 +1,10 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'forgot_password_screen.dart';
 import 'registro_screen.dart';
 import '../utils/colors.dart';
 import '../services/auth_service.dart';
-import '../providers/user_provider.dart';
-import '../providers/pet_firebase_provider.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -40,14 +37,9 @@ class _LoginScreenState extends State<LoginScreen> {
     }
     setState(() => _cargando = true);
     try {
-      final userCredential = await _authService.iniciarSesion(email: email, password: password);
-      if (userCredential.user != null && mounted) {
-        // Cargar datos del usuario y sus mascotas
-        await context.read<UserProvider>().fetchUserProfile(userCredential.user!.uid);
-        if (mounted) {
-          await context.read<PetFirebaseProvider>().fetchPets();
-        }
-      }
+      // Solo iniciamos sesión. El AuthGate detecta el cambio en
+      // authStateChanges() y se encarga de cargar el perfil y las mascotas.
+      await _authService.iniciarSesion(email: email, password: password);
     } catch (e) {
       if (mounted) _mostrarError(e.toString().replaceFirst('Exception: ', ''));
     } finally {
@@ -58,13 +50,9 @@ class _LoginScreenState extends State<LoginScreen> {
   Future<void> _loginGoogle() async {
     setState(() => _googleCargando = true);
     try {
-      final userCredential = await _authService.iniciarConGoogle();
-      if (userCredential != null && userCredential.user != null && mounted) {
-        await context.read<UserProvider>().fetchUserProfile(userCredential.user!.uid);
-        if (mounted) {
-          await context.read<PetFirebaseProvider>().fetchPets();
-        }
-      }
+      // Solo iniciamos sesión. El AuthGate detecta el cambio en
+      // authStateChanges() y se encarga de cargar el perfil y las mascotas.
+      await _authService.iniciarConGoogle();
     } catch (e) {
       if (mounted) _mostrarError('Error al iniciar con Google: $e');
     } finally {

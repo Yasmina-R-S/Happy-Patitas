@@ -14,27 +14,30 @@ class PetFirebaseProvider extends ChangeNotifier {
 
   String get _uid => FirebaseAuth.instance.currentUser?.uid ?? '';
 
-  // ── Carga todas las mascotas del usuario desde Firestore ──────────────────
-  Future<void> fetchPets() async {
-    if (_uid.isEmpty) {
+  // Acepta uid opcional para evitar condición de carrera con currentUser
+  Future<void> fetchPets({String? uid}) async {
+    final effectiveUid = uid ?? _uid;
+    if (effectiveUid.isEmpty) {
       _pets = [];
       notifyListeners();
       return;
     }
-    
+
     _isLoading = true;
     notifyListeners();
 
     try {
+      // Sin orderBy para evitar requerir índice compuesto en Firestore
       final snap = await _db
           .collection('mascotas')
-          .where('ownerId', isEqualTo: _uid)
-          .orderBy('timestamp', descending: false)
+          .where('ownerId', isEqualTo: effectiveUid)
           .get();
 
       _pets = snap.docs
           .map((doc) => Pet.fromMap(doc.id, doc.data()))
           .toList();
+
+      debugPrint('PetFirebaseProvider: cargadas ${_pets.length} mascotas para uid=$effectiveUid');
     } catch (e) {
       debugPrint('PetFirebaseProvider.fetchPets error: $e');
     } finally {
@@ -43,20 +46,16 @@ class PetFirebaseProvider extends ChangeNotifier {
     }
   }
 
-  // ── Elimina una mascota/collar completamente ──────────────────
   Future<void> deletePet(String petId) async {
     try {
       await _db.collection('mascotas').doc(petId).delete();
-
       _pets.removeWhere((pet) => pet.id == petId);
-
       notifyListeners();
     } catch (e) {
       debugPrint('PetFirebaseProvider.deletePet error: $e');
     }
   }
 
-  // ── Añade una mascota a Firestore y la agrega localmente ──────────────────
   Future<String> addPet({
     required String nombre,
     required String raza,
