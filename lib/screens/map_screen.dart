@@ -1,11 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../utils/colors.dart';
-import 'main_screen.dart';
+import '../utils/home_navigator_scope.dart';
+import '../providers/pet_firebase_provider.dart';
+import '../models/pet_model.dart';
 
 class MapScreen extends StatefulWidget {
   const MapScreen({super.key});
@@ -20,24 +24,6 @@ class _MapScreenState extends State<MapScreen> {
   LatLng? _currentLocation;
   bool _isSatellite = false;
   bool _loadingLocation = false;
-
-  // Marcadores de ejemplo (mascotas cercanas)
-  final List<Map<String, dynamic>> _petMarkers = [
-    {
-      'id': 'marker_1',
-      'position': const LatLng(40.416775, -3.703790),
-      'name': 'Toby',
-      'breed': 'Labrador • 2 años',
-      'color': AppColors.primaryBlue,
-    },
-    {
-      'id': 'marker_2',
-      'position': const LatLng(40.420, -3.710),
-      'name': 'Luna',
-      'breed': 'Husky • 1 año',
-      'color': Colors.pinkAccent,
-    },
-  ];
 
   @override
   void initState() {
@@ -85,13 +71,13 @@ class _MapScreenState extends State<MapScreen> {
     }
   }
 
-  void _showPetDetails(Map<String, dynamic> pet) {
+  void _showPetDetails(Pet pet) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
       builder: (context) => Container(
-        height: 200,
+        height: 220,
         decoration: BoxDecoration(
           color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
           borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
@@ -119,13 +105,26 @@ class _MapScreenState extends State<MapScreen> {
             const SizedBox(height: 20),
             Row(
               children: [
-                Container(
-                  width: 60, height: 60,
-                  decoration: BoxDecoration(
-                    color: (pet['color'] as Color).withOpacity(0.15),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(Icons.pets, color: pet['color'] as Color, size: 30),
+                FutureBuilder<String?>(
+                  future: pet.getFullPhotoPath(),
+                  builder: (context, snapshot) {
+                    final path = snapshot.data;
+                    return Container(
+                      width: 70, height: 70,
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryBlue.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: AppColors.primaryBlue, width: 2),
+                      ),
+                      child: ClipOval(
+                        child: path != null 
+                          ? (path.startsWith('http') 
+                              ? Image.network(path, fit: BoxFit.cover)
+                              : Image.file(File(path), fit: BoxFit.cover))
+                          : const Icon(Icons.pets, color: AppColors.primaryBlue, size: 30),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -133,16 +132,16 @@ class _MapScreenState extends State<MapScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        pet['name'],
+                        pet.name,
                         style: GoogleFonts.poppins(
-                          fontSize: 20, fontWeight: FontWeight.bold,
+                          fontSize: 22, fontWeight: FontWeight.bold,
                           color: isDark ? AppColors.textMainDark : AppColors.textMainLight,
                         ),
                       ),
                       Text(
-                        pet['breed'],
+                        '${pet.breed} • ${pet.age} años',
                         style: GoogleFonts.poppins(
-                          fontSize: 13,
+                          fontSize: 14,
                           color: isDark ? AppColors.textSubDark : AppColors.textSubLight,
                         ),
                       ),
@@ -163,7 +162,7 @@ class _MapScreenState extends State<MapScreen> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                   elevation: 0,
                 ),
-                child: Text('VER PERFIL COMPLETO',
+                child: Text('CERRAR',
                     style: GoogleFonts.poppins(fontWeight: FontWeight.w600)),
               ),
             ),
@@ -176,12 +175,13 @@ class _MapScreenState extends State<MapScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final petFirebaseProvider = context.watch<PetFirebaseProvider>();
+    final pets = petFirebaseProvider.pets;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
       body: Stack(
         children: [
-          // MAPA OPENSTREETMAP
           FlutterMap(
             mapController: _mapController,
             options: MapOptions(
@@ -199,7 +199,6 @@ class _MapScreenState extends State<MapScreen> {
                 userAgentPackageName: 'com.example.happy_patitas',
               ),
 
-              // Marcador ubicación actual
               if (_currentLocation != null)
                 MarkerLayer(
                   markers: [
@@ -226,29 +225,47 @@ class _MapScreenState extends State<MapScreen> {
                   ],
                 ),
 
-              // Marcadores mascotas
               MarkerLayer(
-                markers: _petMarkers.map((pet) {
+                markers: pets.map((pet) {
+                  // Generamos una posición ligeramente aleatoria alrededor del centro para demo
+                  // En un caso real, pet.position vendría de la base de datos
+                  final double lat = 40.416775 + (pets.indexOf(pet) * 0.005);
+                  final double lng = -3.703790 + (pets.indexOf(pet) * 0.003);
+                  final LatLng petPosition = LatLng(lat, lng);
+
                   return Marker(
-                    point: pet['position'] as LatLng,
-                    width: 50,
-                    height: 50,
+                    point: petPosition,
+                    width: 55,
+                    height: 55,
                     child: GestureDetector(
                       onTap: () => _showPetDetails(pet),
                       child: Container(
+                        padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
-                          color: pet['color'] as Color,
+                          color: AppColors.primaryBlue,
                           shape: BoxShape.circle,
                           border: Border.all(color: Colors.white, width: 3),
                           boxShadow: [
                             BoxShadow(
-                              color: (pet['color'] as Color).withOpacity(0.4),
+                              color: AppColors.primaryBlue.withOpacity(0.4),
                               blurRadius: 8,
                               spreadRadius: 1,
                             ),
                           ],
                         ),
-                        child: const Icon(Icons.pets, color: Colors.white, size: 24),
+                        child: FutureBuilder<String?>(
+                          future: pet.getFullPhotoPath(),
+                          builder: (context, snapshot) {
+                            final path = snapshot.data;
+                            return ClipOval(
+                              child: path != null 
+                                ? (path.startsWith('http') 
+                                    ? Image.network(path, fit: BoxFit.cover)
+                                    : Image.file(File(path), fit: BoxFit.cover))
+                                : const Icon(Icons.pets, color: Colors.white, size: 24),
+                            );
+                          },
+                        ),
                       ),
                     ),
                   );
@@ -257,7 +274,6 @@ class _MapScreenState extends State<MapScreen> {
             ],
           ),
 
-          // HEADER
           Positioned(
             top: 0, left: 0, right: 0,
             child: Container(
@@ -278,7 +294,7 @@ class _MapScreenState extends State<MapScreen> {
               child: Row(
                 children: [
                   Text(
-                    'Localización',
+                    'Mapa de Mascotas',
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
@@ -298,12 +314,10 @@ class _MapScreenState extends State<MapScreen> {
             ),
           ),
 
-          // BOTONES FLOTANTES
           Positioned(
             bottom: 30, right: 20,
             child: Column(
               children: [
-                // Satélite / Normal
                 FloatingActionButton(
                   heroTag: 'mapType',
                   mini: true,
@@ -317,7 +331,6 @@ class _MapScreenState extends State<MapScreen> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                // Mi ubicación
                 FloatingActionButton(
                   heroTag: 'myLocation',
                   onPressed: _goToCurrentLocation,
@@ -327,7 +340,6 @@ class _MapScreenState extends State<MapScreen> {
               ],
             ),
           ),
-          // Botón volver a Home
           Positioned(
             top: MediaQuery.of(context).padding.top + 12,
             left: 16,

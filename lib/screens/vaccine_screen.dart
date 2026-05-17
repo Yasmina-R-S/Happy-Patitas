@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/pet_model.dart';
-import '../utils/colors.dart';
 
 class VaccineScreen extends StatefulWidget {
   final Pet pet;

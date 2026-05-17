@@ -8,6 +8,9 @@ import 'providers/pet_provider.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
 import 'providers/pet_firebase_provider.dart';
+import 'providers/user_provider.dart';
+import 'providers/health_provider.dart';
+import 'providers/navigation_provider.dart';
 import 'screens/login_screen.dart';
 import 'screens/main_screen.dart';
 
@@ -26,10 +29,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
         ChangeNotifierProvider(create: (_) => PetProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => LocaleProvider()),
         ChangeNotifierProvider(create: (_) => PetFirebaseProvider()),
+        ChangeNotifierProvider(create: (_) => HealthProvider()),
+        ChangeNotifierProvider(create: (_) => NavigationProvider()),
       ],
       child: Consumer2<ThemeProvider, LocaleProvider>(
         builder: (context, themeProvider, localeProvider, child) {
@@ -69,25 +75,49 @@ class MyApp extends StatelessWidget {
 }
 
 /// Escucha el stream de autenticación y redirige según el estado
-class AuthGate extends StatelessWidget {
+class AuthGate extends StatefulWidget {
   const AuthGate({super.key});
+
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  String? _lastUid;
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        // Mientras Firebase comprueba el estado, mostramos un splash mínimo
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const _SplashCargando();
         }
 
-        // Si hay usuario autenticado → pantalla principal
-        if (snapshot.hasData && snapshot.data != null) {
-          return const MainScreen();
+        final user = snapshot.data;
+        if (user != null) {
+          // Si el UID cambió o es la primera vez, disparamos la carga
+          if (_lastUid != user.uid) {
+            _lastUid = user.uid;
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (mounted) {
+                context.read<UserProvider>().fetchUserProfile(user.uid);
+                context.read<PetFirebaseProvider>().fetchPets();
+              }
+            });
+          }
+
+          return Consumer<UserProvider>(
+            builder: (context, userProvider, child) {
+              if (userProvider.user == null || userProvider.isLoading) {
+                return const _SplashCargando();
+              }
+              return const MainScreen();
+            },
+          );
         }
 
-        // Si no hay sesión → pantalla de login
+        _lastUid = null;
         return const LoginScreen();
       },
     );

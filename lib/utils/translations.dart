@@ -291,7 +291,6 @@ class T {
       'alert_threshold': 'Alert Threshold',
       'already_have_an_account_log_in': 'Already have an account? Log in',
       'app_version_3_2_1_build_204': 'App version 3.2.1 · Build 204',
-      'battery_alerts': 'Battery Alerts',
       'body_temperature': 'Body Temperature',
       'bpm': 'bpm',
       'c': '°C',
@@ -299,7 +298,6 @@ class T {
       'cambiar_contrase_a': 'CAMBIAR CONTRASEÑA',
       'cancel': 'Cancel',
       'collar_guardado_con_xito': '¡Collar guardado con éxito!',
-      'collar_management': 'Collar Management',
       'confirm_password': 'Confirm Password',
       'confirma_tu_correo_electronico': 'CONFIRMA TU CORREO ELECTRONICO',
       'confirmar_la_nueva_contrase_a': 'Confirmar la nueva Contraseña',
@@ -327,7 +325,6 @@ class T {
       'no_vaccines_registered': 'No vaccines registered',
       'normal': 'Normal',
       'normal_range_for_dogs_37_5_38_5_c': 'Normal range for dogs: 37.5 – 38.5 °C',
-      'notifications': 'Notifications',
       'olvidaste_tu_contrase_a': '¿Olvidaste tu contraseña?',
       'optimal': 'Optimal',
       'pair_new_collar': 'Pair New Collar',
@@ -349,10 +346,9 @@ class T {
       'slightly_elevated': 'Slightly Elevated',
       'smart_collar_v2': 'Smart Collar v2',
       'stats': 'STATS',
-      'support': 'Support',
       'this_week': 'THIS WEEK',
       'today': 'TODAY',
-      'vaccines': 'Vaccines',
+      'vaccines': 'Vacunas',
       'ver_perfil_completo': 'VER PERFIL COMPLETO',
       'weekly_activity': 'WEEKLY ACTIVITY',
     },
@@ -363,3 +359,6 @@ class T {
     return _v[lang]?[key] ?? _v['en']![key] ?? key;
   }
 }
+
+
+

@@ -1,11 +1,59 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import '../utils/translations.dart';
-import 'reset_password_screen.dart';
 import '../utils/colors.dart';
+import '../services/auth_service.dart';
 
-class ForgotPasswordScreen extends StatelessWidget {
+class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
+
+  @override
+  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+}
+
+class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+  final _emailController = TextEditingController();
+  final _authService = AuthService();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _resetPassword() async {
+    final email = _emailController.text.trim();
+    if (email.isEmpty) {
+      _showSnackBar("Por favor, introduce tu correo electrónico.", isError: true);
+      return;
+    }
+
+    setState(() => _isLoading = true);
+    try {
+      await _authService.recuperarContrasena(email);
+      if (mounted) {
+        _showSnackBar("Se ha enviado un correo para restablecer tu contraseña.");
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        _showSnackBar(e.toString().replaceFirst('Exception: ', ''), isError: true);
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  void _showSnackBar(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: isError ? AppColors.errorRed : Colors.green,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +85,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 20),
                   child: Text(
-                    "CONFIRMA TU CORREO ELECTRONICO",
+                    "RECUPERAR CONTRASEÑA",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 26,
@@ -53,7 +101,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 40),
                   child: Text(
-                    "Para poder renovar la contraseña, hace falta que añadas tu correo electrónico",
+                    "Introduce tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 14,
@@ -73,10 +121,10 @@ class ForgotPasswordScreen extends StatelessWidget {
                       width: 320,
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.white.withValues(alpha: 0.25),
+                        color: Colors.white.withOpacity(0.25),
                         borderRadius: BorderRadius.circular(20),
                         border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.4),
+                          color: Colors.white.withOpacity(0.4),
                         ),
                       ),
                       child: Column(
@@ -89,10 +137,11 @@ class ForgotPasswordScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 6),
                           TextField(
+                            controller: _emailController,
                             keyboardType: TextInputType.emailAddress,
                             decoration: InputDecoration(
                               filled: true,
-                              fillColor: Colors.white.withValues(alpha: 0.8),
+                              fillColor: Colors.white.withOpacity(0.8),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 borderSide: BorderSide.none,
@@ -107,7 +156,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
                               TextButton(
-                                onPressed: () => Navigator.pop(context),
+                                onPressed: _isLoading ? null : () => Navigator.pop(context),
                                 child: const Text(
                                   "Cancel",
                                   style: TextStyle(
@@ -124,16 +173,17 @@ class ForgotPasswordScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const ResetPasswordScreen(),
-                                    ),
-                                  );
-                                },
-                                child: Text(T.of(context, 'siguiente')),
+                                onPressed: _isLoading ? null : _resetPassword,
+                                child: _isLoading
+                                    ? const SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : const Text("Enviar"),
                               ),
                             ],
                           ),

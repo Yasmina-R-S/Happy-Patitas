@@ -4,6 +4,7 @@ import '../utils/translations.dart';
 import '../utils/colors.dart';
 import '../services/database_service.dart';
 import '../providers/pet_firebase_provider.dart';
+import '../models/pet_model.dart';
 
 class CollarManagementScreen extends StatefulWidget {
   const CollarManagementScreen({super.key});
@@ -14,28 +15,19 @@ class CollarManagementScreen extends StatefulWidget {
 }
 
 class _CollarManagementScreenState extends State<CollarManagementScreen> {
-  // Lista local de collares para mostrar en pantalla
-  final List<Map<String, dynamic>> _devices = [
-    {
-      'name': "Max's Collar",
-      'pet': 'Max',
-      'status': 'Connected',
-      'battery': 87,
-      'firmware': '2.1.4',
-      'connected': true,
-    },
-    {
-      'name': "Luna's Collar",
-      'pet': 'Luna',
-      'status': 'Disconnected',
-      'battery': 23,
-      'firmware': '2.0.9',
-      'connected': false,
-    },
-  ];
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<PetFirebaseProvider>().fetchPets();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final petFbProvider = context.watch<PetFirebaseProvider>();
+    final pets = petFbProvider.pets;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -49,12 +41,30 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
           ),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(24),
-        children: [
-          _buildSectionHeader(context, T.of(context, 'connected_devices')),
-          ..._devices.map((d) => _buildCollarCard(context, d)),
-          const SizedBox(height: 32),
+      body: petFbProvider.isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : ListView(
+              padding: const EdgeInsets.all(24),
+              children: [
+                _buildSectionHeader(context, T.of(context, 'connected_devices')),
+                if (pets.isEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Center(
+                      child: Text(
+                        'No hay collares registrados',
+                        style: TextStyle(color: AppColors.textSubLight),
+                      ),
+                    ),
+                  )
+                else
+                  ...pets.map(
+                    (pet) => _buildCollarCard(
+                      context,
+                      pet,
+                    ),
+                  ),
+                const SizedBox(height: 32),
           _buildSectionHeader(context, T.of(context, 'actions')),
           _buildActionTile(
             context,
@@ -85,10 +95,16 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
 
   // ── Tarjeta de cada collar ────────────────────────────────────────────────
 
-  Widget _buildCollarCard(BuildContext context, Map<String, dynamic> device) {
+  Widget _buildCollarCard(
+    BuildContext context,
+    Pet pet,
+  ) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final bool connected = device['connected'] as bool;
-    final int battery = device['battery'] as int;
+    final bool connected = pet.deviceStatus == 'Online';
+    // Asignamos valores por defecto ya que el modelo Pet no los tiene
+    final int battery = 85; 
+    final String firmware = '2.1.4';
+    
     final Color batteryColor = battery > 50
         ? AppColors.statusHappy
         : battery > 20
@@ -129,7 +145,7 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      device['name'],
+                      'Collar de ${pet.name}',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -139,7 +155,7 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
                       ),
                     ),
                     Text(
-                      device['pet'],
+                      pet.breed,
                       style: TextStyle(
                         fontSize: 13,
                         color: isDark
@@ -192,7 +208,7 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
                   color: isDark ? AppColors.textSubDark : AppColors.textSubLight),
               const SizedBox(width: 4),
               Text(
-                "v${device['firmware']}",
+                "v$firmware",
                 style: TextStyle(
                     fontSize: 13,
                     color: isDark
@@ -200,21 +216,47 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
                         : AppColors.textSubLight),
               ),
               const Spacer(),
-              TextButton(
+              IconButton(
+                icon: const Icon(Icons.delete_rounded),
+                color: Colors.red,
                 onPressed: () async {
-                  await DatabaseService().guardarCollar(
-                    idMascota: device['pet'],
-                    bateria: device['battery'],
-                  );
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  final confirm = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Eliminar collar'),
                       content: Text(
-                          '${T.of(context, 'datos_guardados')} ${device['name']}'),
-                    ));
+                        '¿Eliminar definitivamente el collar de ${pet.name}?',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context, false),
+                          child: const Text('Cancelar'),
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                          onPressed: () => Navigator.pop(context, true),
+                          child: const Text('Eliminar'),
+                        ),
+                      ],
+                    ),
+                  );
+
+                  if (confirm == true) {
+                    if (context.mounted) {
+                      await context.read<PetFirebaseProvider>().deletePet(pet.id);
+                      
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Collar de ${pet.name} eliminado definitivamente'),
+                          ),
+                        );
+                      }
+                    }
                   }
                 },
-                child: Text(T.of(context, 'save'),
-                    style: const TextStyle(color: AppColors.primaryBlue)),
               ),
             ],
           ),
@@ -577,7 +619,6 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
                                       double.parse(pesoCtrl.text.trim());
                                   final battery =
                                       int.parse(batteryCtrl.text.trim());
-                                  final firmware = firmwareCtrl.text.trim();
 
                                   try {
                                     // 1️⃣ Guardar mascota en Firebase
@@ -598,20 +639,6 @@ class _CollarManagementScreenState extends State<CollarManagementScreen> {
                                       idMascota: petName,
                                       bateria: battery,
                                     );
-
-                                    // 3️⃣ Añadir a la lista local de collares
-                                    setState(() {
-                                      _devices.add({
-                                        'name': collarName,
-                                        'pet': petName,
-                                        'status': isConnected
-                                            ? 'Connected'
-                                            : 'Disconnected',
-                                        'battery': battery,
-                                        'firmware': firmware,
-                                        'connected': isConnected,
-                                      });
-                                    });
                                   } catch (e) {
                                     if (context.mounted) {
                                       ScaffoldMessenger.of(context)

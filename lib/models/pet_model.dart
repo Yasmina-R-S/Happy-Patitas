@@ -1,3 +1,5 @@
+import '../services/local_picture_service.dart';
+
 enum PetMood { happy, resting, active, stressed }
 
 class Pet {
@@ -6,7 +8,7 @@ class Pet {
   final String breed;
   final int age;
   final double weight;
-  final String imageUrl;
+  final String imageUrl; // Puede ser un nombre de archivo local o una URL
   final PetMood mood;
   final String deviceStatus;
   final DateTime lastVaccination;
@@ -22,6 +24,36 @@ class Pet {
     required this.deviceStatus,
     required this.lastVaccination,
   });
+
+  /// Resuelve la ruta completa de la imagen (URL o Archivo Local)
+  Future<String?> getFullPhotoPath() async {
+    if (imageUrl.isEmpty) return null;
+    return await LocalPictureService().getFullPath(imageUrl);
+  }
+
+  Pet copyWith({
+    String? id,
+    String? name,
+    String? breed,
+    int? age,
+    double? weight,
+    String? imageUrl,
+    PetMood? mood,
+    String? deviceStatus,
+    DateTime? lastVaccination,
+  }) {
+    return Pet(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      breed: breed ?? this.breed,
+      age: age ?? this.age,
+      weight: weight ?? this.weight,
+      imageUrl: imageUrl ?? this.imageUrl,
+      mood: mood ?? this.mood,
+      deviceStatus: deviceStatus ?? this.deviceStatus,
+      lastVaccination: lastVaccination ?? this.lastVaccination,
+    );
+  }
 
   factory Pet.fromMap(String id, Map<String, dynamic> map) {
     PetMood mood;

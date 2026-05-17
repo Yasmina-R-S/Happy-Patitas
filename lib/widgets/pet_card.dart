@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import '../models/pet_model.dart';
 import '../utils/colors.dart';
@@ -39,31 +40,43 @@ class PetCard extends StatelessWidget {
               tag: pet.id,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20),
-                child: Image.network(
-                  pet.imageUrl,
+                child: SizedBox(
                   width: 80,
                   height: 80,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) => Container(
-                    width: 80,
-                    height: 80,
-                    color: AppColors.primaryBlue.withOpacity(0.1),
-                    child: const Icon(Icons.pets, color: AppColors.primaryBlue),
+                  child: FutureBuilder<String?>(
+                    future: pet.getFullPhotoPath(),
+                    builder: (context, snapshot) {
+                      final path = snapshot.data;
+                      final hasImage = path != null && path.isNotEmpty;
+
+                      if (!hasImage) {
+                        return Container(
+                          color: AppColors.primaryBlue.withOpacity(0.1),
+                          child: const Icon(Icons.pets, color: AppColors.primaryBlue),
+                        );
+                      }
+
+                      if (path.startsWith('http')) {
+                        return Image.network(
+                          path,
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              _buildPlaceholder(),
+                        );
+                      } else {
+                        return Image.file(
+                          File(path),
+                          width: 80,
+                          height: 80,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              _buildPlaceholder(),
+                        );
+                      }
+                    },
                   ),
-                  loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) return child;
-                    return Container(
-                      width: 80,
-                      height: 80,
-                      color: AppColors.ultraLightBlue,
-                      child: const Center(
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          color: AppColors.primaryBlue,
-                        ),
-                      ),
-                    );
-                  },
                 ),
               ),
             ),
@@ -121,6 +134,15 @@ class PetCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildPlaceholder() {
+    return Container(
+      width: 80,
+      height: 80,
+      color: AppColors.primaryBlue.withOpacity(0.1),
+      child: const Icon(Icons.pets, color: AppColors.primaryBlue),
     );
   }
 }

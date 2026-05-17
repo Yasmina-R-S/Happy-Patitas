@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
 
   /// Devuelve el usuario actualmente autenticado (o null si no hay sesión)
   User? get usuarioActual => _auth.currentUser;
@@ -39,9 +41,44 @@ class AuthService {
     }
   }
 
+  /// Inicia sesión con Google
+  Future<UserCredential?> iniciarConGoogle() async {
+    try {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) return null; // El usuario canceló el login
+
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+      // Create a new credential
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Once signed in, return the UserCredential
+      return await _auth.signInWithCredential(credential);
+    } catch (e) {
+      throw Exception('Error al iniciar sesión con Google: $e');
+    }
+  }
+
+  /// Envía un correo de recuperación de contraseña
+  Future<void> recuperarContrasena(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email.trim());
+    } on FirebaseAuthException catch (e) {
+      throw _traducirError(e);
+    }
+  }
+
   /// Cierra la sesión del usuario actual
   Future<void> cerrarSesion() async {
-    await _auth.signOut();
+    await Future.wait([
+      _auth.signOut(),
+      _googleSignIn.signOut(),
+    ]);
   }
 
   /// Traduce códigos de error de Firebase a mensajes legibles

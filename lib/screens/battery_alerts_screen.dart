@@ -63,7 +63,7 @@ class _BatteryAlertsScreenState extends State<BatteryAlertsScreen> {
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
                 color: isDark
-                    ? Colors.white.withOpacity(0.05)
+                    ? Colors.white.withValues(alpha: 0.05)
                     : AppColors.ultraLightBlue,
               ),
             ),
@@ -75,7 +75,7 @@ class _BatteryAlertsScreenState extends State<BatteryAlertsScreen> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: AppColors.primaryBlue.withOpacity(0.1),
+                        color: AppColors.primaryBlue.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: const Icon(Icons.battery_alert_rounded,
@@ -122,9 +122,9 @@ class _BatteryAlertsScreenState extends State<BatteryAlertsScreen> {
                 SliderTheme(
                   data: SliderTheme.of(context).copyWith(
                     activeTrackColor: AppColors.primaryBlue,
-                    inactiveTrackColor: AppColors.primaryBlue.withOpacity(0.2),
+                    inactiveTrackColor: AppColors.primaryBlue.withValues(alpha: 0.2),
                     thumbColor: AppColors.primaryBlue,
-                    overlayColor: AppColors.primaryBlue.withOpacity(0.1),
+                    overlayColor: AppColors.primaryBlue.withValues(alpha: 0.1),
                   ),
                   child: Slider(
                     value: _alertThreshold,
@@ -201,7 +201,7 @@ class _BatteryAlertsScreenState extends State<BatteryAlertsScreen> {
         color: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? Colors.white.withOpacity(0.05) : AppColors.ultraLightBlue,
+          color: isDark ? Colors.white.withValues(alpha: 0.05) : AppColors.ultraLightBlue,
         ),
       ),
       child: Row(
@@ -209,7 +209,7 @@ class _BatteryAlertsScreenState extends State<BatteryAlertsScreen> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: AppColors.primaryBlue.withOpacity(0.1),
+              color: AppColors.primaryBlue.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: AppColors.primaryBlue, size: 20),

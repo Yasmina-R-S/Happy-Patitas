@@ -5,32 +5,11 @@ import 'health_screen.dart';
 import 'pets_screen.dart';
 import 'settings_screen.dart';
 import '../utils/colors.dart';
-import '../providers/theme_provider.dart';
 import '../utils/translations.dart';
-
-/// InheritedWidget que expone el callback goHome() a cualquier widget
-/// descendiente, sin necesidad de pasar parámetros por constructor.
-class HomeNavigatorScope extends InheritedWidget {
-  final VoidCallback goHome;
-
-  const HomeNavigatorScope({
-    super.key,
-    required this.goHome,
-    required super.child,
-  });
-
-  static HomeNavigatorScope? of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<HomeNavigatorScope>();
-  }
-
-  @override
-  bool updateShouldNotify(HomeNavigatorScope oldWidget) =>
-      goHome != oldWidget.goHome;
-}
+import '../utils/home_navigator_scope.dart';
+import '../providers/navigation_provider.dart';
 
 /// Wrapper que da a la pestaña Health su propio Navigator anidado.
-/// Así el botón atrás en sub-pantallas (HeartRate, BodyTemp, Sleep)
-/// vuelve a HealthScreen en lugar de ir al login.
 class HealthTab extends StatelessWidget {
   const HealthTab({super.key});
 
@@ -52,10 +31,6 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _currentIndex = 0;
-
-  void _goHome() => setState(() => _currentIndex = 0);
-
   // Usamos HealthTab y SettingsTab (Navigator anidado) para que el botón
   // atrás en sus sub-pantallas vuelva dentro de la pestaña, no al login.
   List<Widget> get _screens => [
@@ -68,28 +43,27 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final navProvider = context.watch<NavigationProvider>();
 
     return HomeNavigatorScope(
-      goHome: _goHome,
+      goHome: () => navProvider.goHome(),
+      setIndex: (index) => navProvider.setIndex(index),
       child: PopScope(
-        // Nunca permitimos que el sistema salga de la app con el botón atrás
         canPop: false,
         onPopInvokedWithResult: (didPop, result) {
-          if (didPop) return; // ya gestionado (no debería ocurrir con canPop: false)
-          if (_currentIndex != 0) {
-            // Si no estamos en Home, volvemos a Home
-            setState(() => _currentIndex = 0);
+          if (didPop) return;
+          if (navProvider.currentIndex != 0) {
+            navProvider.goHome();
           }
-          // Si ya estamos en Home, no hacemos nada (no salimos de la app)
         },
         child: Scaffold(
           body: IndexedStack(
-            index: _currentIndex,
+            index: navProvider.currentIndex,
             children: _screens,
           ),
           bottomNavigationBar: BottomNavigationBar(
-            currentIndex: _currentIndex,
-            onTap: (index) => setState(() => _currentIndex = index),
+            currentIndex: navProvider.currentIndex,
+            onTap: (index) => navProvider.setIndex(index),
             type: BottomNavigationBarType.fixed,
             backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
             selectedItemColor: AppColors.primaryBlue,
@@ -97,7 +71,7 @@ class _MainScreenState extends State<MainScreen> {
             showUnselectedLabels: true,
             items: [
               BottomNavigationBarItem(
-                icon: const Icon(Icons.home_rounded),
+                icon: const Icon(Icons.pets_rounded),
                 label: T.of(context, 'home'),
               ),
               BottomNavigationBarItem(

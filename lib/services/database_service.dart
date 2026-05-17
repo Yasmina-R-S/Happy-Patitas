@@ -11,19 +11,21 @@ class DatabaseService {
     return user.uid;
   }
 
-  /// Guarda un collar en Firestore.
-  /// Si no se pasa [idDueno], usa automáticamente el UID del usuario autenticado.
-  Future<void> guardarCollar({
-    String? idDueno,
-    required String idMascota,
-    required int bateria,
+  /// Crea el documento de perfil del usuario en Firestore
+  Future<void> crearUsuario({
+    required String uid,
+    required String name,
+    required String email,
+    String phone = '',
   }) async {
     try {
-      await _db.collection('collares').add({
-        'idDueno': idDueno ?? _uidActual,
-        'idMascota': idMascota,
-        'bateria': bateria,
-        'timestamp': FieldValue.serverTimestamp(),
+      await _db.collection('usuarios').doc(uid).set({
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'photoUrl': null,
+        'createdAt': FieldValue.serverTimestamp(),
+        'hasCompletedProfile': false,
       });
     } catch (e) {
       rethrow;
@@ -31,21 +33,41 @@ class DatabaseService {
   }
 
   /// Guarda una mascota en Firestore.
-  /// Si no se pasa [idDueno], usa automáticamente el UID del usuario autenticado.
+  /// Se usa 'ownerId' para identificar al dueño.
   Future<void> guardarMascota({
-    String? idDueno,
+    String? ownerId,
     required String nombre,
     required String raza,
     required int edad,
     required double peso,
+    String deviceId = '',
   }) async {
     try {
       await _db.collection('mascotas').add({
-        'idDueno': idDueno ?? _uidActual,
+        'ownerId': ownerId ?? _uidActual,
         'nombre': nombre,
         'raza': raza,
         'edad': edad,
         'peso': peso,
+        'deviceId': deviceId,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  /// Guarda un collar en Firestore. (Opcional, si se sigue usando por separado)
+  Future<void> guardarCollar({
+    String? ownerId,
+    required String idMascota,
+    required int bateria,
+  }) async {
+    try {
+      await _db.collection('collares').add({
+        'ownerId': ownerId ?? _uidActual,
+        'idMascota': idMascota,
+        'bateria': bateria,
         'timestamp': FieldValue.serverTimestamp(),
       });
     } catch (e) {
