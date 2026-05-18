@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import 'map_screen.dart';
 import 'health_screen.dart';
 import 'pets_screen.dart';
 import 'settings_screen.dart';
+import 'ai_chat_screen.dart';
+
 import '../utils/colors.dart';
 import '../utils/translations.dart';
 import '../utils/home_navigator_scope.dart';
+
 import '../providers/navigation_provider.dart';
 
 /// Wrapper que da a la pestaña Health su propio Navigator anidado.
@@ -31,11 +35,11 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  // Usamos HealthTab y SettingsTab (Navigator anidado) para que el botón
-  // atrás en sus sub-pantallas vuelva dentro de la pestaña, no al login.
+
   List<Widget> get _screens => [
     const PetsScreen(),
     const MapScreen(),
+    AIChatScreen(),
     const HealthTab(),
     const SettingsTab(),
   ];
@@ -43,6 +47,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
     final navProvider = context.watch<NavigationProvider>();
 
     return HomeNavigatorScope(
@@ -52,6 +57,7 @@ class _MainScreenState extends State<MainScreen> {
         canPop: false,
         onPopInvokedWithResult: (didPop, result) {
           if (didPop) return;
+
           if (navProvider.currentIndex != 0) {
             navProvider.goHome();
           }
@@ -61,27 +67,45 @@ class _MainScreenState extends State<MainScreen> {
             index: navProvider.currentIndex,
             children: _screens,
           ),
+
           bottomNavigationBar: BottomNavigationBar(
             currentIndex: navProvider.currentIndex,
-            onTap: (index) => navProvider.setIndex(index),
+
+            onTap: (index) {
+              navProvider.setIndex(index);
+            },
+
             type: BottomNavigationBarType.fixed,
-            backgroundColor: isDark ? AppColors.surfaceDark : AppColors.surfaceLight,
+
+            backgroundColor: isDark
+                ? AppColors.surfaceDark
+                : AppColors.surfaceLight,
+
             selectedItemColor: AppColors.primaryBlue,
             unselectedItemColor: AppColors.textSubLight,
             showUnselectedLabels: true,
+
             items: [
               BottomNavigationBarItem(
                 icon: const Icon(Icons.pets_rounded),
                 label: T.of(context, 'home'),
               ),
+
               BottomNavigationBarItem(
                 icon: const Icon(Icons.map_rounded),
                 label: T.of(context, 'map'),
               ),
+
+              const BottomNavigationBarItem(
+                icon: Icon(Icons.smart_toy_rounded),
+                label: 'IA',
+              ),
+
               BottomNavigationBarItem(
                 icon: const Icon(Icons.favorite_rounded),
                 label: T.of(context, 'health'),
               ),
+
               BottomNavigationBarItem(
                 icon: const Icon(Icons.settings_rounded),
                 label: T.of(context, 'settings'),

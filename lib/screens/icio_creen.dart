@@ -4,6 +4,7 @@ import 'login_screen.dart';
 import 'registro_screen.dart';
 import '../utils/colors.dart';
 import '../providers/theme_provider.dart';
+import '../services/ai_service.dart';
 
 class IcioScreen extends StatelessWidget {
   const IcioScreen({super.key});
